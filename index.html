@@ -1,66 +1,56 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TUKE Lecture Dashboard</title>
+    <title>TUKE Smart Dashboard</title>
     <style>
-        /* CSS Variables for easy switching */
         :root { 
-            --primary: #003366; 
-            --accent: #e74c3c; 
-            --bg: #f0f2f5; 
-            --text: #333;
-            --sidebar-text: white;
-            --card-bg: white;
-            --border: #ddd;
-            --slot-time: #555;
-            --online-bg: #e8f4fd;
+            --primary: #003366; --accent: #e74c3c; --bg: #f0f2f5; --text: #333;
+            --sidebar-text: white; --card-bg: white; --border: #ddd;
+            --slot-time: #555; --online-bg: #e8f4fd; --highlight: #f1c40f;
         }
 
-        /* Dark Mode overrides */
         [data-theme="dark"] {
-            --bg: #121212;
-            --text: #e0e0e0;
-            --card-bg: #1e1e1e;
-            --border: #333;
-            --slot-time: #bbb;
-            --online-bg: #1a2633;
+            --bg: #121212; --text: #e0e0e0; --card-bg: #1e1e1e;
+            --border: #333; --slot-time: #bbb; --online-bg: #1a2633;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; transition: background 0.3s; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; transition: all 0.3s; }
         
-        /* Sidebar */
-        .sidebar { width: 280px; background: var(--primary); color: var(--sidebar-text); height: 100vh; padding: 20px; position: fixed; }
-        .sidebar h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .sidebar { width: 280px; background: var(--primary); color: var(--sidebar-text); height: 100vh; padding: 20px; position: fixed; overflow-y: auto; box-sizing: border-box; }
+        .sidebar h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; font-size: 1.2em; }
         .course-list { list-style: none; padding: 0; }
         .course-list li { margin: 15px 0; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; }
         .course-link { color: #5dade2; text-decoration: none; font-size: 0.9em; display: block; margin-top: 5px; }
 
-        /* Main Content */
-        .main { margin-left: 320px; padding: 40px; width: 100%; }
+        .main { margin-left: 280px; padding: 40px; width: 100%; box-sizing: border-box; }
+        
+        .status-bar { 
+            background: var(--card-bg); padding: 20px; border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 25px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;
+        }
+        .status-item { border-left: 4px solid var(--primary); padding-left: 15px; }
+        .status-item span { display: block; font-size: 0.75em; color: var(--slot-time); text-transform: uppercase; }
+        .status-item strong { font-size: 1.1em; display: block; margin-top: 4px; }
+        .countdown { color: var(--accent); font-weight: bold; font-size: 0.9em; }
+
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        
-        .timetable { width: 100%; border-collapse: collapse; background: var(--card-bg); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .timetable { width: 100%; border-collapse: collapse; background: var(--card-bg); table-layout: fixed; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         th { background: var(--primary); color: white; padding: 15px; }
-        td { border: 1px solid var(--border); padding: 10px; vertical-align: top; width: 18%; height: 100px; }
         
-        /* Slot Styling */
+        /* Highlighting Logic */
+        .current-day-col { background: rgba(241, 196, 15, 0.1) !important; }
+        th.current-day-header { background: #004d99 !important; border-bottom: 4px solid var(--highlight) !important; }
+
+        td { border: 1px solid var(--border); padding: 10px; vertical-align: top; height: 120px; transition: background 0.3s; }
         .slot { font-size: 0.85em; padding: 8px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #3498db; background: rgba(0,0,0,0.02); }
-        [data-theme="dark"] .slot { background: rgba(255,255,255,0.03); }
         .online { background: var(--online-bg); border-left-color: var(--accent); }
         .time { font-weight: bold; color: var(--slot-time); display: block; margin-bottom: 3px; }
-        .join-btn { display: inline-block; background: var(--accent); color: white; padding: 4px 10px; border-radius: 3px; text-decoration: none; font-size: 0.85em; margin-top: 8px; font-weight: bold; }
+        .join-btn { display: inline-block; background: var(--accent); color: white; padding: 2px 8px; border-radius: 3px; text-decoration: none; font-size: 0.8em; margin-top: 5px; }
         
-        /* Toggle Button Styling */
-        .theme-toggle {
-            background: #34495e;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+        .active-now { border: 2px solid var(--highlight) !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .theme-toggle { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -79,6 +69,13 @@
 </aside>
 
 <div class="main">
+    <div class="status-bar">
+        <div class="status-item"><span>Date & Time</span><strong id="live-clock">--:--:--</strong></div>
+        <div class="status-item"><span>Semester Week</span><strong id="sem-week">--</strong></div>
+        <div class="status-item"><span>Current Activity</span><strong id="current-task">Free</strong></div>
+        <div class="status-item"><span>Coming Up Next</span><strong id="next-task">--</strong><div id="countdown" class="countdown"></div></div>
+    </div>
+
     <div class="header-flex">
         <h1>LS 2025/2026 Timetable</h1>
         <button class="theme-toggle" id="theme-btn">🌙 Dark Mode</button>
@@ -87,77 +84,58 @@
     <table class="timetable">
         <thead>
             <tr>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
+                <th id="day-1">Monday</th><th id="day-2">Tuesday</th><th id="day-3">Wednesday</th><th id="day-4">Thursday</th><th id="day-5">Friday</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>
-                    <div class="slot">
-                        <span class="time">09:10 - 10:40</span>
-                        Programovanie (Cvičenie)<br>
-                        <small>L9-B529</small>
+                <td id="col-1">
+                    <div class="slot" data-name="Programovanie (Cvičenie)" data-start="09:10" data-end="10:40">
+                        <span class="time">09:10 - 10:40</span> Programovanie (Cvičenie)<br><small>L9-B529</small>
                     </div>
-                    <div class="slot">
-                        <span class="time">10:50 - 12:20</span>
-                        Fyzika I (Cvičenie)<br>
-                        <small>PK4_AVWS</small>
+                    <div class="slot" data-name="Fyzika I (Cvičenie)" data-start="10:50" data-end="12:20">
+                        <span class="time">10:50 - 12:20</span> Fyzika I (Cvičenie)<br><small>PK4_AVWS</small>
                     </div>
-                    <div class="slot">
-                        <span class="time">15:10 - 16:40</span>
-                        ZSI (Cvičenie)<br>
-                        <small>L9-B529</small>
+                    <div class="slot" data-name="ZSI (Cvičenie)" data-start="15:10" data-end="16:40">
+                        <span class="time">15:10 - 16:40</span> ZSI (Cvičenie)<br><small>L9-B529</small>
                     </div>
                 </td>
-                <td>
-                    <div class="slot">
-                        <span class="time">07:30 - 09:00</span>
-                        Matematika II (Cvičenie)<br>
-                        <small>PK6_PC5</small>
+                <td id="col-2">
+                    <div class="slot" data-name="Matematika II (Cvičenie)" data-start="07:30" data-end="09:00">
+                        <span class="time">07:30 - 09:00</span> Matematika II (Cvičenie)<br><small>PK6_PC5</small>
                     </div>
-                    <div class="slot online">
-                        <span class="time">10:50 - 12:20</span>
-                        <strong>ZSI (Prednáška)</strong><br>
-                        <a href="https://teams.microsoft.com/meet/37993941338936?p=LweZOXqWb4F07xSIIC" class="join-btn">Join</a>
+                    <div class="slot online" data-name="ZSI (Prednáška)" data-start="10:50" data-end="12:20">
+                        <span class="time">10:50 - 12:20</span> <strong>ZSI (Prednáška)</strong><br>
+                        <a href="https://teams.microsoft.com/meet/37993941338936?p=LweZOXqWb4F07xSIIC" class="join-btn" target="_blank">Join</a>
                     </div>
                 </td>
-                <td>
-                    <div class="slot online">
-                        <span class="time">08:15 - 09:45</span>
-                        <strong>Programovanie (Prednáška)</strong><br>
-                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn">Join</a>
+                <td id="col-3">
+                    <div class="slot online" data-name="Programovanie (Prednáška)" data-start="08:15" data-end="09:45">
+                        <span class="time">08:15 - 09:45</span> <strong>Programovanie (Prednáška)</strong><br>
+                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn" target="_blank">Join</a>
                     </div>
-                    <div class="slot online">
-                        <span class="time">09:55 - 11:35</span>
-                        <strong>Matematika II (Prednáška)</strong><br>
-                        <small>Heslo: prvaci</small>
-                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn">Join</a>
+                    <div class="slot online" data-name="Matematika II (Prednáška)" data-start="09:55" data-end="11:35">
+                        <span class="time">09:55 - 11:35</span> <strong>Matematika II (Prednáška)</strong><br>
+                        <small>Heslo: prvaci</small><br>
+                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn" target="_blank">Join</a>
                     </div>
-                    <div class="slot online">
-                        <span class="time">12:30 - 14:00</span>
-                        <strong>Fyzika I (Prednáška)</strong><br>
-                        <small>Heslo: 3PQq8kj4tYN</small>
-                        <a href="https://tuke.webex.com/tuke/k2/j.phpMTID=te715f8292355bbc3a08edef424377012" class="join-btn">Join</a>
+                    <div class="slot online" data-name="Fyzika I (Prednáška)" data-start="12:30" data-end="14:00">
+                        <span class="time">12:30 - 14:00</span> <strong>Fyzika I (Prednáška)</strong><br>
+                        <small>Heslo: 3PQq8kj4tYN</small><br>
+                        <a href="https://tuke.webex.com/tuke/k2/j.phpMTID=te715f8292355bbc3a08edef424377012" class="join-btn" target="_blank">Join</a>
                     </div>
-                    <div class="slot online">
-                        <span class="time">14:15 - 15:55</span>
-                        <strong>PPI (Prednáška)</strong><br>
-                        <a href="-" class="join-btn">N/A</a>
+                    <div class="slot online" data-name="PPI (Prednáška)" data-start="14:15" data-end="15:55">
+                        <span class="time">14:15 - 15:55</span> <strong>PPI (Prednáška)</strong><br>
+                        <a href="#" class="join-btn">N/A</a>
                     </div>
                 </td>
-                <td>
-                    <div class="slot">
-                        <span class="time">07:30 - 09:00</span>
-                        PPI (Cvičenie)<br>
-                        <small>PK6_PC2</small>
+                <td id="col-4">
+                    <div class="slot" data-name="PPI (Cvičenie)" data-start="07:30" data-end="09:00">
+                        <span class="time">07:30 - 09:00</span> PPI (Cvičenie)<br><small>PK6_PC2</small>
                     </div>
                 </td>
-                <td>
-                    <div class="slot" style="border: none; color: #999;">No scheduled events</div>
+                <td id="col-5">
+                    <div style="text-align: center; color: #999; margin-top: 20px;">No scheduled events</div>
                 </td>
             </tr>
         </tbody>
@@ -165,27 +143,75 @@
 </div>
 
 <script>
-    const btn = document.getElementById('theme-btn');
-    const currentTheme = localStorage.getItem('theme');
+    function updateDashboard() {
+        const now = new Date();
+        const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        const day = now.getDay(); 
 
-    if (currentTheme === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-        btn.innerText = "☀️ Light Mode";
+        document.getElementById('live-clock').innerText = now.toLocaleTimeString('en-GB');
+
+        // Semester Logic (Feb 16 - May 14)
+        const semStart = new Date('2026-02-16');
+        const semEnd = new Date('2026-05-14');
+        const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
+        document.getElementById('sem-week').innerText = (now >= semStart && now <= semEnd) ? `Week ${weekNum}` : "Holiday";
+
+        // RESET Highlights
+        document.querySelectorAll('td').forEach(el => el.classList.remove('current-day-col'));
+        document.querySelectorAll('th').forEach(el => el.classList.remove('current-day-header'));
+        document.querySelectorAll('.slot').forEach(el => el.classList.remove('active-now'));
+        
+        let activeClass = "Free";
+        let nextClass = "None";
+        let minDiff = Infinity;
+
+        // Apply highlighting for today
+        if (day >= 1 && day <= 5) {
+            const todayCol = document.getElementById('col-' + day);
+            const todayHeader = document.getElementById('day-' + day);
+            if(todayCol) todayCol.classList.add('current-day-col');
+            if(todayHeader) todayHeader.classList.add('current-day-header');
+
+            document.querySelectorAll(`#col-${day} .slot`).forEach(slot => {
+                const start = slot.dataset.start;
+                const end = slot.dataset.end;
+                const name = slot.dataset.name;
+
+                if (currentTimeStr >= start && currentTimeStr <= end) {
+                    slot.classList.add('active-now');
+                    activeClass = name;
+                } else if (start > currentTimeStr) {
+                    const [h, m] = start.split(':');
+                    const startDate = new Date(); startDate.setHours(h, m, 0);
+                    const diff = (startDate - now) / 1000 / 60;
+                    if (diff < minDiff) { 
+                        minDiff = diff; 
+                        nextClass = name; 
+                    }
+                }
+            });
+        }
+
+        document.getElementById('current-task').innerText = activeClass;
+        document.getElementById('next-task').innerText = nextClass;
+        
+        const countdownEl = document.getElementById('countdown');
+        if (minDiff !== Infinity) {
+            const hrs = Math.floor(minDiff / 60);
+            const mins = Math.floor(minDiff % 60);
+            countdownEl.innerText = `starts in ${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
+        } else { countdownEl.innerText = ""; }
     }
 
+    const btn = document.getElementById('theme-btn');
     btn.addEventListener('click', () => {
-        let theme = document.body.getAttribute('data-theme');
-        if (theme === 'dark') {
-            document.body.removeAttribute('data-theme');
-            btn.innerText = "🌙 Dark Mode";
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.body.setAttribute('data-theme', 'dark');
-            btn.innerText = "☀️ Light Mode";
-            localStorage.setItem('theme', 'dark');
-        }
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        isDark ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'dark');
+        btn.innerText = isDark ? "🌙 Dark Mode" : "☀️ Light Mode";
     });
-</script>
 
+    setInterval(updateDashboard, 1000);
+    updateDashboard();
+</script>
 </body>
 </html>
