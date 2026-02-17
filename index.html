@@ -8,6 +8,7 @@
             --primary: #003366; --accent: #e74c3c; --bg: #f0f2f5; --text: #333;
             --sidebar-text: white; --card-bg: white; --border: #ddd;
             --slot-time: #555; --online-bg: #e8f4fd; --highlight: #f1c40f;
+            --green: #27ae60;
         }
 
         [data-theme="dark"] {
@@ -25,6 +26,7 @@
 
         .main { margin-left: 280px; padding: 40px; width: 100%; box-sizing: border-box; }
         
+        /* Status Bar */
         .status-bar { 
             background: var(--card-bg); padding: 20px; border-radius: 8px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 25px;
@@ -36,10 +38,11 @@
         .countdown { color: var(--accent); font-weight: bold; font-size: 0.9em; }
 
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .timetable { width: 100%; border-collapse: collapse; background: var(--card-bg); table-layout: fixed; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        
+        /* Timetable */
+        .timetable { width: 100%; border-collapse: collapse; background: var(--card-bg); table-layout: fixed; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 40px; }
         th { background: var(--primary); color: white; padding: 15px; }
         
-        /* Highlighting Logic */
         .current-day-col { background: rgba(241, 196, 15, 0.1) !important; }
         th.current-day-header { background: #004d99 !important; border-bottom: 4px solid var(--highlight) !important; }
 
@@ -51,6 +54,34 @@
         
         .active-now { border: 2px solid var(--highlight) !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .theme-toggle { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+
+        /* --- NEW ASSIGNMENTS SECTION STYLES --- */
+        .assignments-header { margin-bottom: 15px; border-left: 5px solid var(--accent); padding-left: 15px; }
+        .assignments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .assign-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .assign-subject { font-size: 0.85em; color: var(--slot-time); text-transform: uppercase; letter-spacing: 1px; }
+        .assign-title { font-size: 1.1em; font-weight: bold; margin: 10px 0 5px 0; color: var(--text); }
+        .assign-date { font-size: 0.9em; color: var(--primary); margin-bottom: 15px; display: block; }
+        .assign-timer { 
+            background: rgba(0,0,0,0.05); 
+            padding: 8px; 
+            border-radius: 4px; 
+            text-align: center; 
+            font-weight: bold; 
+            color: var(--accent); 
+        }
+        .assign-timer.safe { color: var(--green); } /* Green if > 3 days left */
     </style>
 </head>
 <body>
@@ -63,14 +94,14 @@
         <li><strong>KPI Moodle</strong><a href="https://moodle.fei.tuke.sk/" class="course-link" target="_blank">Course Materials →</a></li>
         <li><strong>PVJC</strong><a href="https://kurzy.kpi.fei.tuke.sk/pvjc/2026/" class="course-link" target="_blank">Open PVJC Site →</a></li>
         <li><strong>MAT II</strong><a href="https://kmti.fei.tuke.sk/predmet/matematika-ii" class="course-link" target="_blank">Open MAT II →</a></li>
-        <li><strong>MAT II DRIVE</strong><a href="https://tukesk-my.sharepoint.com/personal/jana_fortes_tuke_sk/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fjana%5Ffortes%5Ftuke%5Fsk%2FDocuments%2F0%5FTUKE%2F1%5FKMTI%2F%5FMatematika%202%2F2026%2FCvicenia%5Fzdielane&ct=1771322784352&or=OWA%2DNT%2DMail&cid=5d6187f8%2D2c62%2D9779%2De9cc%2D4186d786d7f3&ga=1" class="course-link" target="_blank">Onedrive Link →</a></li>
+        <li><strong>MAT II DRIVE</strong><a href="https://tukesk-my.sharepoint.com/personal/jana_fortes_tuke_sk/_layouts/15/onedrive.aspx" class="course-link" target="_blank">Onedrive Link →</a></li>
         <li><strong>ZSI</strong><a href="https://kurzy.kpi.fei.tuke.sk/zsi/" class="course-link" target="_blank">Open ZSI →</a></li>
     </ul>
 </aside>
 
 <div class="main">
     <div class="status-bar">
-        <div class="status-item"><span>Date & Time</span><strong id="live-clock">--:--:--</strong></div>
+        <div class="status-item"><span>Date & Time</span><strong id="live-clock">--</strong></div>
         <div class="status-item"><span>Semester Week</span><strong id="sem-week">--</strong></div>
         <div class="status-item"><span>Current Activity</span><strong id="current-task">Free</strong></div>
         <div class="status-item"><span>Coming Up Next</span><strong id="next-task">--</strong><div id="countdown" class="countdown"></div></div>
@@ -106,24 +137,24 @@
                     </div>
                     <div class="slot online" data-name="ZSI (Prednáška)" data-start="10:50" data-end="12:20">
                         <span class="time">10:50 - 12:20</span> <strong>ZSI (Prednáška)</strong><br>
-                        <a href="https://teams.microsoft.com/meet/37993941338936?p=LweZOXqWb4F07xSIIC" class="join-btn" target="_blank">Join</a>
+                        <a href="https://teams.microsoft.com/meet/37993941338936" class="join-btn" target="_blank">Join</a>
                     </div>
                 </td>
                 <td id="col-3">
                     <div class="slot online" data-name="Programovanie (Prednáška)" data-start="08:15" data-end="09:45">
                         <span class="time">08:15 - 09:45</span> <strong>Programovanie (Prednáška)</strong><br>
                         <small>Heslo: prvaci</small><br>
-                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn" target="_blank">Join</a>
+                        <a href="#" class="join-btn" target="_blank">Join</a>
                     </div>
                     <div class="slot online" data-name="Matematika II (Prednáška)" data-start="09:55" data-end="11:35">
                         <span class="time">09:55 - 11:35</span> <strong>Matematika II (Prednáška)</strong><br>
                         <small>Heslo: prvaci</small><br>
-                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn" target="_blank">Join</a>
+                        <a href="#" class="join-btn" target="_blank">Join</a>
                     </div>
                     <div class="slot online" data-name="Fyzika I (Prednáška)" data-start="12:30" data-end="14:00">
                         <span class="time">12:30 - 14:00</span> <strong>Fyzika I (Prednáška)</strong><br>
                         <small>Heslo: 3PQq8kj4tYN</small><br>
-                        <a href="https://tuke.webex.com/tuke/k2/j.phpMTID=te715f8292355bbc3a08edef424377012" class="join-btn" target="_blank">Join</a>
+                        <a href="#" class="join-btn" target="_blank">Join</a>
                     </div>
                     <div class="slot online" data-name="PPI (Prednáška)" data-start="14:15" data-end="15:55">
                         <span class="time">14:15 - 15:55</span> <strong>PPI (Prednáška)</strong><br>
@@ -141,15 +172,34 @@
             </tr>
         </tbody>
     </table>
+
+    <h2 class="assignments-header">Upcoming Assignments</h2>
+    <div class="assignments-grid" id="assignments-container">
+        </div>
+
 </div>
 
 <script>
+    // --- CONFIG: EDIT YOUR ASSIGNMENTS HERE ---
+    // Format: 'YYYY-MM-DDTHH:MM' (ISO format)
+    const assignmentsData = [
+        { subject: "Programovanie", task: "Problem Set #1: Top Secret", date: "2026-03-08T23:59" },
+        { subject: "Fyzika I", task: "Zápočtová písomka (možno)", date: "2026-05-04T10:50" },
+        { subject: "ZSI", task: "Analýza požiadaciek a konceptuálny návrh", date: "2026-03-30T23:59" },
+        { subject: "Matematika II", task: "Zápočtová písomka 1", date: "2026-03-31T07:30" },
+        { subject: "PPI", task: "IDK :>", date: "2069-04-20T07:30" }
+    ];
+
     function updateDashboard() {
         const now = new Date();
         const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
         const day = now.getDay(); 
 
-        document.getElementById('live-clock').innerText = now.toLocaleTimeString('en-GB');
+        // 1. FIX: European Date Format (DD.MM.YYYY HH:MM:SS)
+        const dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const timeStr = now.toLocaleTimeString('en-GB');
+        const dateStr = now.toLocaleDateString('sk-SK', dateOptions); // Slovakia format uses dots
+        document.getElementById('live-clock').innerHTML = `${dateStr}<br>${timeStr}`;
 
         // Semester Logic (Feb 16 - May 14)
         const semStart = new Date('2026-02-16');
@@ -202,13 +252,56 @@
             const mins = Math.floor(minDiff % 60);
             countdownEl.innerText = `starts in ${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
         } else { countdownEl.innerText = ""; }
+
+        // 2. NEW: Update Assignments Countdowns
+        renderAssignments(now);
+    }
+
+    function renderAssignments(now) {
+        const container = document.getElementById('assignments-container');
+        container.innerHTML = ""; // Clear existing to rebuild
+
+        assignmentsData.forEach(item => {
+            const deadline = new Date(item.date);
+            const diffMs = deadline - now;
+            
+            let timerText = "Expired";
+            let timerClass = "";
+
+            if (diffMs > 0) {
+                const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                timerText = `${days}d ${hours}h ${minutes}m`;
+                if (days >= 3) timerClass = "safe"; // Green if plenty of time
+            } else {
+                 timerText = "Passed";
+            }
+
+            // Create Card HTML
+            const card = document.createElement('div');
+            card.className = "assign-card";
+            card.innerHTML = `
+                <div class="assign-subject">${item.subject}</div>
+                <div class="assign-title">${item.task}</div>
+                <span class="assign-date">Deadline: ${deadline.toLocaleDateString('sk-SK')} ${deadline.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                <div class="assign-timer ${timerClass}">${timerText}</div>
+            `;
+            container.appendChild(card);
+        });
     }
 
     const btn = document.getElementById('theme-btn');
     btn.addEventListener('click', () => {
         const isDark = document.body.getAttribute('data-theme') === 'dark';
-        isDark ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'dark');
-        btn.innerText = isDark ? "🌙 Dark Mode" : "☀️ Light Mode";
+        if (isDark) {
+            document.body.removeAttribute('data-theme');
+            btn.innerText = "🌙 Dark Mode";
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            btn.innerText = "☀️ Light Mode";
+        }
     });
 
     setInterval(updateDashboard, 1000);
@@ -216,5 +309,3 @@
 </script>
 </body>
 </html>
-
-
