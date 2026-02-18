@@ -174,83 +174,108 @@
 <script>
     // EDIT YOUR DEADLINES HERE
     const assignmentsData = [
-
         { subject: "Programovanie", task: "Problem Set #1: Top Secret", date: "2026-03-08T23:59" },
-
         { subject: "Fyzika I", task: "Zápočtová písomka (možno)", date: "2026-05-04T10:50" },
-
         { subject: "Základy softvérového inžinierstva", task: "Analýza požiadaciek a konceptuálny návrh", date: "2026-03-30T23:59" },
-
         { subject: "Matematika II", task: "Zápočtová písomka 1", date: "2026-03-31T07:30" },
-
         { subject: "Princípy počítačového inžinierstva", task: "IDK :>", date: "2069-04-20T07:30" }
-
     ];
+
+    function getMinutes(timeStr) {
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+    }
 
     function updateDashboard() {
         const now = new Date();
-        const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        const day = now.getDay(); 
-
-        // Fix: European Date + Time
+        const currentDay = now.getDay(); 
+        const currentMins = now.getHours() * 60 + now.getMinutes();
+        
         const dateStr = now.toLocaleDateString('sk-SK');
         const timeStr = now.toLocaleTimeString('en-GB');
         document.getElementById('live-clock').innerHTML = `${dateStr}<br>${timeStr}`;
 
-        // Semester Logic
         const semStart = new Date('2026-02-16');
         const semEnd = new Date('2026-05-14');
         const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
         document.getElementById('sem-week').innerText = (now >= semStart && now <= semEnd) ? `Week ${weekNum}` : "Holiday";
 
-        // Reset Highlights & Apply Styles
         document.querySelectorAll('td').forEach(el => el.classList.remove('current-day-col'));
         document.querySelectorAll('th').forEach(el => el.classList.remove('current-day-header'));
-        
-        let activeClass = "Free";
-        let nextClass = "None";
-        let minDiff = Infinity;
-
-        // Apply column highlights
-        if (day >= 1 && day <= 5) {
-            document.getElementById('col-' + day)?.classList.add('current-day-col');
-            document.getElementById('day-' + day)?.classList.add('current-day-header');
+        if (currentDay >= 1 && currentDay <= 5) {
+            document.getElementById('col-' + currentDay)?.classList.add('current-day-col');
+            document.getElementById('day-' + currentDay)?.classList.add('current-day-header');
         }
 
+        let allSlots = [];
         document.querySelectorAll('.slot').forEach(slot => {
-            const name = slot.dataset.name;
-            const start = slot.dataset.start;
-            const end = slot.dataset.end;
-            const parentId = slot.closest('td').id;
-            const isToday = parentId === 'col-' + day;
+            const parentId = slot.closest('td').id; 
+            const slotDay = parseInt(parentId.replace('col-', ''));
+            const startMins = getMinutes(slot.dataset.start);
+            const endMins = getMinutes(slot.dataset.end);
+            
+            allSlots.push({
+                element: slot,
+                name: slot.dataset.name,
+                day: slotDay,
+                start: startMins,
+                end: endMins
+            });
+        });
 
-            // Apply specific type styles
-            slot.classList.remove('active-now', 'type-cvicenie', 'type-prednaska');
-            if (name.includes("Cvičenie")) slot.classList.add('type-cvicenie');
-            if (name.includes("Prednáška")) slot.classList.add('type-prednaska');
+        const currentWeeklyMins = (currentDay * 1440) + currentMins;
+        let activeSlot = null;
+        let nextSlot = null;
+        let minDiffToNext = Infinity;
 
-            if (isToday) {
-                if (currentTimeStr >= start && currentTimeStr <= end) {
-                    slot.classList.add('active-now');
-                    activeClass = name;
-                } else if (start > currentTimeStr) {
-                    const [h, m] = start.split(':');
-                    const startDate = new Date(); startDate.setHours(h, m, 0);
-                    const diff = (startDate - now) / 1000 / 60;
-                    if (diff < minDiff) { minDiff = diff; nextClass = name; }
-                }
+        allSlots.forEach(slot => {
+            slot.element.classList.remove('active-now', 'type-cvicenie', 'type-prednaska');
+            if (slot.name.includes("Cvičenie")) slot.element.classList.add('type-cvicenie');
+            if (slot.name.includes("Prednáška")) slot.element.classList.add('type-prednaska');
+
+            if (slot.day === currentDay && currentMins >= slot.start && currentMins < slot.end) {
+                activeSlot = slot;
+                slot.element.classList.add('active-now');
+            }
+
+            let slotWeeklyMins = (slot.day * 1440) + slot.start;
+            if (slotWeeklyMins <= currentWeeklyMins) {
+                slotWeeklyMins += (7 * 1440); 
+            }
+
+            const diff = slotWeeklyMins - currentWeeklyMins;
+            if (diff > 0 && diff < minDiffToNext) {
+                minDiffToNext = diff;
+                nextSlot = slot;
             }
         });
 
-        document.getElementById('current-task').innerText = activeClass;
-        document.getElementById('next-task').innerText = nextClass;
-        
+        // Update Current Activity with Bold Capitalized text
+        const currentTaskEl = document.getElementById('current-task');
+        if (activeSlot) {
+            const minsLeft = activeSlot.end - currentMins;
+            currentTaskEl.innerHTML = `${activeSlot.name} <span style='font-size:0.75em; color:var(--accent); display:block; font-weight:bold; text-transform:none;'>Ends in ${minsLeft}m</span>`;
+        } else {
+            currentTaskEl.innerText = "Free";
+        }
+
+        const nextTaskEl = document.getElementById('next-task');
         const countdownEl = document.getElementById('countdown');
-        if (minDiff !== Infinity) {
-            const hrs = Math.floor(minDiff / 60);
-            const mins = Math.floor(minDiff % 60);
-            countdownEl.innerText = `starts in ${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
-        } else { countdownEl.innerText = ""; }
+        if (nextSlot) {
+            nextTaskEl.innerText = nextSlot.name;
+            const days = Math.floor(minDiffToNext / 1440);
+            const hrs = Math.floor((minDiffToNext % 1440) / 60);
+            const mins = Math.floor(minDiffToNext % 60);
+            
+            let timeString = "";
+            if (days > 0) timeString += `${days}d `;
+            if (hrs > 0) timeString += `${hrs}h `;
+            timeString += `${mins}m`;
+            countdownEl.innerText = `Starts in ${timeString}`;
+        } else {
+            nextTaskEl.innerText = "--";
+            countdownEl.innerText = "";
+        }
 
         renderAssignments(now);
     }
@@ -299,6 +324,3 @@
 </script>
 </body>
 </html>
-
-
-
