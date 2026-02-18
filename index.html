@@ -84,14 +84,13 @@
     <h2>TUKE FEI INF A6</h2>
     <ul class="course-list">
         <li><strong>MAIS</strong><a href="https://mais.tuke.sk" class="course-link" target="_blank">Student MAIS →</a>
-            <a href="https://https://maisportal.tuke.sk/portal/studijneProgramy.mais" class="course-link" target="_blank">MAIS Portal →</a></li>
+            <a href="https://maisportal.tuke.sk/portal/studijneProgramy.mais" class="course-link" target="_blank">MAIS Portal →</a></li>
         <li><strong>Moodle</strong><a href="https://moodle.tuke.sk" class="course-link" target="_blank">TUKE Moodle →</a>
             <a href="https://moodle.fei.tuke.sk/" class="course-link" target="_blank">KPI Moodle →</a></li>
         <li><strong>PVJC</strong><a href="https://kurzy.kpi.fei.tuke.sk/pvjc/2026/" class="course-link" target="_blank">Open PVJC Site →</a></li>
         <li><strong>MAT II</strong><a href="https://kmti.fei.tuke.sk/predmet/matematika-ii" class="course-link" target="_blank">Open MAT II →</a>
             <a href="https://tukesk-my.sharepoint.com/personal/jana_fortes_tuke_sk/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fjana%5Ffortes%5Ftuke%5Fsk%2FDocuments%2F0%5FTUKE%2F1%5FKMTI%2F%5FMatematika%202%2F2026%2FCvicenia%5Fzdielane&ct=1771322784352&or=OWA%2DNT%2DMail&cid=5d6187f8%2D2c62%2D9779%2De9cc%2D4186d786d7f3&ga=1" class="course-link" target="_blank">Onedrive Link →</a></li>
         <li><strong>ZSI</strong><a href="https://kurzy.kpi.fei.tuke.sk/zsi/" class="course-link" target="_blank">Open ZSI →</a></li>
-
     </ul>
 </aside>
 
@@ -169,18 +168,24 @@
         </tbody>
     </table>
 
-    <h2>Assignments</h2>
-    <div class="assignments-grid" id="assignments-container"></div>
+    <div id="active-assignments-section">
+        <h2>Assignments</h2>
+        <div class="assignments-grid" id="assignments-container"></div>
+    </div>
+
+    <div id="passed-assignments-section" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 20px;">
+        <h2 style="color: var(--slot-time); font-size: 1.2em;">Passed Assignments</h2>
+        <div class="assignments-grid" id="passed-container"></div>
+    </div>
 </div>
 
 <script>
-    // EDIT YOUR DEADLINES HERE
     const assignmentsData = [
         { subject: "Programovanie", task: "Problem Set #1: Top Secret", date: "2026-03-08T23:59" },
         { subject: "Fyzika I", task: "Zápočtová písomka (možno)", date: "2026-05-04T10:50" },
         { subject: "Základy softvérového inžinierstva", task: "Analýza požiadaciek a konceptuálny návrh", date: "2026-03-30T23:59" },
         { subject: "Matematika II", task: "Zápočtová písomka 1", date: "2026-03-31T07:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "IDK :>", date: "2069-04-20T07:30" }
+        { subject: "Matematika II", task: "Zápočtová písomka 2", date: "2026-05-20T07:30" }
     ];
 
     function getMinutes(timeStr) {
@@ -252,7 +257,6 @@
             }
         });
 
-        // Update Current Activity with Bold Capitalized text
         const currentTaskEl = document.getElementById('current-task');
         if (activeSlot) {
             const minsLeft = activeSlot.end - currentMins;
@@ -283,35 +287,69 @@
     }
 
     function renderAssignments(now) {
-        const container = document.getElementById('assignments-container');
-        container.innerHTML = "";
-        if (assignmentsData.length === 0) {
-            container.innerHTML = "<p>No active assignments! 🎉</p>";
-            return;
-        }
+        const activeContainer = document.getElementById('assignments-container');
+        const passedContainer = document.getElementById('passed-container');
+        const passedSection = document.getElementById('passed-assignments-section');
+        
+        activeContainer.innerHTML = "";
+        passedContainer.innerHTML = "";
+        
+        let activeHTML = "";
+        let passedHTML = "";
 
-        assignmentsData.forEach(item => {
-            const deadline = new Date(item.date);
-            const diff = deadline - now;
+        // Separate and Sort
+        const activeList = assignmentsData.filter(item => !item.date || new Date(item.date) > now);
+        const passedList = assignmentsData.filter(item => item.date && new Date(item.date) <= now);
+
+        activeList.sort((a, b) => {
+            if (a.date === "") return 1;
+            if (b.date === "") return -1;
+            return new Date(a.date) - new Date(b.date);
+        });
+        passedList.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const getCard = (item) => {
             let timer = "Passed";
             let timerClass = "";
-
-            if (diff > 0) {
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                timer = `${d}d ${h}h ${m}m`;
-                if (d >= 3) timerClass = "safe";
+            let dateDisplay = "Status: Clear";
+            
+            if (item.date) {
+                const deadline = new Date(item.date);
+                const diff = deadline - now;
+                dateDisplay = `Deadline: ${deadline.toLocaleDateString('sk-SK')} ${deadline.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+                
+                if (diff > 0) {
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    timer = `${d}d ${h}h ${m}m`;
+                    if (d >= 3) timerClass = "safe";
+                }
+            } else {
+                timer = "No assignments";
+                timerClass = "safe";
             }
 
-            container.innerHTML += `
+            return `
                 <div class="assign-card">
                     <div class="assign-subject">${item.subject}</div>
                     <div class="assign-title">${item.task}</div>
-                    <span class="assign-date">Deadline: ${deadline.toLocaleDateString('sk-SK')} ${deadline.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                    <span class="assign-date">${dateDisplay}</span>
                     <div class="assign-timer ${timerClass}">${timer}</div>
                 </div>`;
-        });
+        };
+
+        activeList.forEach(item => activeHTML += getCard(item));
+        passedList.forEach(item => passedHTML += getCard(item));
+
+        activeContainer.innerHTML = activeHTML || "<p>No active assignments! 🎉</p>";
+        
+        if (passedList.length > 0) {
+            passedSection.style.display = "block";
+            passedContainer.innerHTML = passedHTML;
+        } else {
+            passedSection.style.display = "none";
+        }
     }
 
     const btn = document.getElementById('theme-btn');
@@ -326,5 +364,3 @@
 </script>
 </body>
 </html>
-
-
