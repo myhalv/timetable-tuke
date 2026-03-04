@@ -391,9 +391,6 @@
             localStorage.setItem('dashboard-theme', 'dark');
         }
     });
-
-    setInterval(updateDashboard, 1000);
-    updateDashboard();
     const splashTexts = [
         { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 10 },
         { text: "#🇺🇸Los Angeles is painting its streets white To combat extreme heat waves and the “urban heat island effect, LA is coating its black asphalt roads with a special solar reflective paint. This simple hack bounces the sun's rays back into space instead of absorbing them, dropping street-level temperatures by up to 15 degrees. It's a massive, real-world experiment to cool down the city and save lives during brutal summers.", weight: 5 },
@@ -417,9 +414,13 @@
 
     // Run once on load
     showRandomSplash();
+    setInterval(updateDashboard, 1000);
+    updateDashboard();
+    
 </script>
 </body>
 </html>
+
 
 
 
