@@ -174,10 +174,10 @@
                     </div>
                 </td>
                 <td id="col-5">
-                    <div style="text-align: center; color: #999; margin-top: 20px;>
-                        <span id="random-splash">Loading fact...</span>
-                    </div>
-                </td>
+                <div style="text-align: center; color: #999; margin-top: 20px;">
+                    <span id="random-splash">Loading fact...</span>
+                </div>
+            </td>
             </tr>
         </tbody>
     </table>
@@ -204,9 +204,33 @@
         { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 2", date: "2026-04-16T07:30" }
     ];
 
+    const splashTexts = [
+        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 10 },
+        { text: "#🇺🇸 Los Angeles is painting its streets white to combat extreme heat waves. It drops street-level temperatures by up to 15 degrees.", weight: 5 },
+        { text: "#🎓 TUKE is turning people into depressed femboys! Using PK4_AVWS, they make you wear thigh highs and cry, 'cause you can't laugh during Fyzika I.", weight: 1 },
+        { text: "This website is 100% AI Slop, why are you even here?", weight: 2 }, 
+        { text: "Aréna my ass", weight: 2 }
+    ];
+
     function getMinutes(timeStr) {
         const [h, m] = timeStr.split(':').map(Number);
         return h * 60 + m;
+    }
+
+    function showRandomSplash() {
+        const splashEl = document.getElementById('random-splash');
+        if (!splashEl) return;
+        
+        const totalWeight = splashTexts.reduce((sum, item) => sum + item.weight, 0);
+        let random = Math.random() * totalWeight;
+        
+        for (const item of splashTexts) {
+            if (random < item.weight) {
+                splashEl.innerText = item.text;
+                return;
+            }
+            random -= item.weight;
+        }
     }
 
     function updateDashboard() {
@@ -232,7 +256,9 @@
 
         let allSlots = [];
         document.querySelectorAll('.slot').forEach(slot => {
-            const parentId = slot.closest('td').id; 
+            const parentTd = slot.closest('td');
+            if (!parentTd) return;
+            const parentId = parentTd.id; 
             const slotDay = parseInt(parentId.replace('col-', ''));
             const startMins = getMinutes(slot.dataset.start);
             const endMins = getMinutes(slot.dataset.end);
@@ -313,15 +339,10 @@
         let activeHTML = "";
         let passedHTML = "";
 
-        // Separate and Sort
         const activeList = assignmentsData.filter(item => !item.date || new Date(item.date) > now);
         const passedList = assignmentsData.filter(item => item.date && new Date(item.date) <= now);
 
-        activeList.sort((a, b) => {
-            if (a.date === "") return 1;
-            if (b.date === "") return -1;
-            return new Date(a.date) - new Date(b.date);
-        });
+        activeList.sort((a, b) => (new Date(a.date) || 0) - (new Date(b.date) || 0));
         passedList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         const getCard = (item) => {
@@ -341,9 +362,6 @@
                     timer = `${d}d ${h}h ${m}m`;
                     if (d >= 3) timerClass = "safe";
                 }
-            } else {
-                timer = "No assignments";
-                timerClass = "safe";
             }
 
             return `
@@ -359,67 +377,39 @@
         passedList.forEach(item => passedHTML += getCard(item));
 
         activeContainer.innerHTML = activeHTML || "<p>No active assignments! 🎉</p>";
-        
-        if (passedList.length > 0) {
-            passedSection.style.display = "block";
-            passedContainer.innerHTML = passedHTML;
-        } else {
-            passedSection.style.display = "none";
-        }
-    }
-// --- THEME MEMORY LOGIC ---
-    const btn = document.getElementById('theme-btn');
-    
-    // 1. Check if a preference was saved previously
-    const savedTheme = localStorage.getItem('dashboard-theme');
-    if (savedTheme === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-        btn.innerText = "☀️ Light Mode";
+        passedSection.style.display = passedList.length > 0 ? "block" : "none";
+        passedContainer.innerHTML = passedHTML;
     }
 
-    // 2. Handle the click and save the new preference
-    btn.addEventListener('click', () => {
+    // --- INITIALIZATION ---
+    const themeBtn = document.getElementById('theme-btn');
+    const savedTheme = localStorage.getItem('dashboard-theme');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeBtn.innerText = "☀️ Light Mode";
+    }
+
+    themeBtn.addEventListener('click', () => {
         const isDark = document.body.getAttribute('data-theme') === 'dark';
-        
         if (isDark) {
             document.body.removeAttribute('data-theme');
-            btn.innerText = "🌙 Dark Mode";
+            themeBtn.innerText = "🌙 Dark Mode";
             localStorage.setItem('dashboard-theme', 'light');
         } else {
             document.body.setAttribute('data-theme', 'dark');
-            btn.innerText = "☀️ Light Mode";
+            themeBtn.innerText = "☀️ Light Mode";
             localStorage.setItem('dashboard-theme', 'dark');
         }
     });
-    const splashTexts = [
-        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 10 },
-        { text: "#🇺🇸Los Angeles is painting its streets white To combat extreme heat waves and the “urban heat island effect, LA is coating its black asphalt roads with a special solar reflective paint. This simple hack bounces the sun's rays back into space instead of absorbing them, dropping street-level temperatures by up to 15 degrees. It's a massive, real-world experiment to cool down the city and save lives during brutal summers.", weight: 5 },
-        { text: "#🎓TUKE is turning people into depressed femboys! Using PK4_AVWS, They make you wear thigh highs and cry, 'cause you can't laugh during Fyzika I", weight: 1 },
-        { text: "This website is 100% AI Slop, why are you even here?", weight: 2 }, 
-        { text: "Aréna my ass", weight: 2 }
-    ];
 
-    function showRandomSplash() {
-        const totalWeight = splashTexts.reduce((sum, item) => sum + item.weight, 0);
-        let random = Math.random() * totalWeight;
-        
-        for (const item of splashTexts) {
-            if (random < item.weight) {
-                document.getElementById('random-splash').innerText = item.text;
-                return;
-            }
-            random -= item.weight;
-        }
-    }
-
-    // Run once on load
     showRandomSplash();
-    setInterval(updateDashboard, 1000);
     updateDashboard();
-    
+    setInterval(updateDashboard, 1000);
 </script>
 </body>
 </html>
+
 
 
 
