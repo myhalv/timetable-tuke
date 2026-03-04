@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>A6 Dashboard</title>
+    <script>
+        (function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
     <style>
         :root { 
@@ -15,7 +22,7 @@
             --assign-date-color: #003366;
         }
 
-        [data-theme="dark"] {
+        :root[data-theme="dark"], [data-theme="dark"] {
             --bg: #121212; --text: #e0e0e0; --card-bg: #1e1e1e;
             --border: #333; --slot-time: #bbb; --online-bg: #1a2633;
             --lec-bg: #162a3a;
@@ -313,7 +320,6 @@
         let activeHTML = "";
         let passedHTML = "";
 
-        // Separate and Sort
         const activeList = assignmentsData.filter(item => !item.date || new Date(item.date) > now);
         const passedList = assignmentsData.filter(item => item.date && new Date(item.date) <= now);
 
@@ -368,18 +374,33 @@
         }
     }
 
+    // --- PERSISTENT DARK MODE LOGIC ---
     const btn = document.getElementById('theme-btn');
+    
+    // Sync button text on load
+    const isCurrentlyDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    btn.innerText = isCurrentlyDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+
     btn.addEventListener('click', () => {
-        const isDark = document.body.getAttribute('data-theme') === 'dark';
-        isDark ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'dark');
-        btn.innerText = isDark ? "🌙 Dark Mode" : "☀️ Light Mode";
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            btn.innerText = "🌙 Dark Mode";
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            btn.innerText = "☀️ Light Mode";
+        }
     });
 
+    // --- INITIALIZATION ---
     setInterval(updateDashboard, 1000);
     updateDashboard();
+
     const splashTexts = [
-        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 10 },
-        { text: "#🇺🇸 Los Angeles is painting its streets white to combat heat. street temperatures drop by 15°F.", weight: 5 },
+        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 20 },
+        { text: "#🇺🇸 Los Angeles is painting its streets white to combat heat. Street temperatures drop by 15°F.", weight: 5 },
         { text: "#🎓 TUKE is turning people into depressed femboys! Using PK4_AVWS, they make you wear thigh highs and cry during Fyzika I.", weight: 1 },
         { text: "This website is 100% AI Slop, why are you even here?", weight: 2 }, 
         { text: "Aréna my ass", weight: 2 }
@@ -398,11 +419,11 @@
         }
     }
 
-    // Run once on load
     showRandomSplash();
 </script>
 </body>
 </html>
+
 
 
 
