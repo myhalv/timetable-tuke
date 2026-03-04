@@ -367,12 +367,29 @@
             passedSection.style.display = "none";
         }
     }
-
+// --- THEME MEMORY LOGIC ---
     const btn = document.getElementById('theme-btn');
+    
+    // 1. Check if a preference was saved previously
+    const savedTheme = localStorage.getItem('dashboard-theme');
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        btn.innerText = "☀️ Light Mode";
+    }
+
+    // 2. Handle the click and save the new preference
     btn.addEventListener('click', () => {
         const isDark = document.body.getAttribute('data-theme') === 'dark';
-        isDark ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'dark');
-        btn.innerText = isDark ? "🌙 Dark Mode" : "☀️ Light Mode";
+        
+        if (isDark) {
+            document.body.removeAttribute('data-theme');
+            btn.innerText = "🌙 Dark Mode";
+            localStorage.setItem('dashboard-theme', 'light');
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            btn.innerText = "☀️ Light Mode";
+            localStorage.setItem('dashboard-theme', 'dark');
+        }
     });
 
     setInterval(updateDashboard, 1000);
@@ -403,6 +420,7 @@
 </script>
 </body>
 </html>
+
 
 
 
