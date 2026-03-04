@@ -77,7 +77,6 @@
         .assign-timer { background: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; text-align: center; font-weight: bold; color: var(--accent); }
         .assign-timer.safe { color: var(--green); }
     </style>
-    <script async src="https://sleepie.uk/oneko.js"></script>
 </head>
 <body>
 
@@ -175,7 +174,9 @@
                     </div>
                 </td>
                 <td id="col-5">
-                    <div style="text-align: center; color: #999; margin-top: 20px;">#🇯🇵Japan is turning footsteps into electricity! Using piezoelectric tiles, every step you take generates a small amount of energy</div>
+                    <div style="text-align: center; color: #999; margin-top: 20px; font-style: italic;">
+                        <span id="random-splash">Loading fact...</span>
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -376,9 +377,33 @@
 
     setInterval(updateDashboard, 1000);
     updateDashboard();
+    const splashTexts = [
+        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 10 },
+        { text: "#💻 Coding is 10% writing code and 90% figuring out why it doesn’t work.", weight: 5 },
+        { text: "#☕ Fun fact: The first webcam was created to check if a coffee pot was full.", weight: 5 },
+        { text: "#🤖 You are currently using a custom dashboard. Efficiency +10.", weight: 2 }, // Rare
+        { text: "#📚 'The best way to predict the future is to invent it.' – Alan Kay", weight: 3 }
+    ];
+
+    function showRandomSplash() {
+        const totalWeight = splashTexts.reduce((sum, item) => sum + item.weight, 0);
+        let random = Math.random() * totalWeight;
+        
+        for (const item of splashTexts) {
+            if (random < item.weight) {
+                document.getElementById('random-splash').innerText = item.text;
+                return;
+            }
+            random -= item.weight;
+        }
+    }
+
+    // Run once on load
+    showRandomSplash();
 </script>
 </body>
 </html>
+
 
 
 
