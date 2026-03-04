@@ -4,6 +4,369 @@
     <meta charset="UTF-8">
     <title>A6 Dashboard</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+    
+    <script>
+        if (localStorage.getItem('dashboard-theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+
+    <style>
+        :root { 
+            --primary: #003366; --accent: #e74c3c; --bg: #f0f2f5; --text: #333;
+            --sidebar-text: white; --card-bg: white; --border: #ddd;
+            --slot-time: #555; --online-bg: #e8f4fd; --highlight: #f1c40f;
+            --green: #27ae60;
+            --lab-red: #c0392b; 
+            --lec-bg: #ebf5fb;
+            --assign-date-color: #003366;
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212; --text: #e0e0e0; --card-bg: #1e1e1e;
+            --border: #333; --slot-time: #bbb; --online-bg: #1a2633;
+            --lec-bg: #162a3a;
+            --assign-date-color: #5dade2; 
+        }
+
+        /* 2. NO TRANSITION ON LOAD (Prevents the sliding/fading animation when refreshing) */
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; }
+        
+        /* Only apply transition AFTER the page has loaded if user clicks the button */
+        body.theme-transitioning { transition: all 0.3s; }
+        
+        .sidebar { width: 280px; background: var(--primary); color: var(--sidebar-text); height: 100vh; padding: 20px; position: fixed; overflow-y: auto; box-sizing: border-box; }
+        .sidebar h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; font-size: 1.2em; }
+        .course-list { list-style: none; padding: 0; }
+        .course-list li { margin: 15px 0; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; }
+        .course-link { color: #5dade2; text-decoration: none; font-size: 0.9em; display: block; margin-top: 5px; }
+
+        .main { margin-left: 280px; padding: 40px; width: 100%; box-sizing: border-box; }
+        
+        .status-bar { 
+            background: var(--card-bg); padding: 20px; border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 25px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;
+        }
+        .status-item { border-left: 4px solid var(--primary); padding-left: 15px; }
+        .status-item span { display: block; font-size: 0.75em; color: var(--slot-time); text-transform: uppercase; }
+        .status-item strong { font-size: 1.1em; display: block; margin-top: 4px; }
+        .countdown { color: var(--accent); font-weight: bold; font-size: 0.9em; }
+
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .timetable { width: 100%; border-collapse: collapse; background: var(--card-bg); table-layout: fixed; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 40px;}
+        th { background: var(--primary); color: white; padding: 15px; }
+        
+        .current-day-col { background: rgba(241, 196, 15, 0.1) !important; }
+        th.current-day-header { background: #004d99 !important; border-bottom: 4px solid var(--highlight) !important; }
+
+        td { border: 1px solid var(--border); padding: 10px; vertical-align: top; height: 120px; transition: background 0.3s; }
+        
+        /* SLOT STYLING */
+        .slot { font-size: 0.85em; padding: 8px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #3498db; background: rgba(0,0,0,0.02); }
+        
+        /* Cvičenia: Restored Dark Red Border & Bold Name */
+        .type-cvicenie { border-left-color: var(--lab-red) !important; font-weight: bold; }
+        
+        /* Prednášky: Light background & Normal weight */
+        .type-prednaska { border-left-color: #e07c2a !important; background: var(--lec-bg) !important; font-weight: normal !important; }
+        .type-prednaska strong { font-weight: normal !important; }
+
+        .online { background: var(--online-bg); border-left-color: var(--accent); }
+        .time { font-weight: bold; color: var(--slot-time); display: block; margin-bottom: 3px; }
+        .join-btn { display: inline-block; background: var(--accent); color: white; padding: 2px 8px; border-radius: 3px; text-decoration: none; font-size: 0.8em; margin-top: 5px; }
+        
+        .active-now { border: 2px solid var(--highlight) !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .theme-toggle { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+
+        /* ASSIGNMENTS SECTION */
+        .assignments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
+        .assign-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .assign-subject { font-size: 0.8em; color: var(--slot-time); text-transform: uppercase; }
+        .assign-title { font-size: 1.1em; font-weight: bold; margin: 5px 0; }
+        .assign-date { font-size: 0.9em; color: var(--assign-date-color); margin-bottom: 15px; display: block; font-weight: 600; }
+        .assign-timer { background: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; text-align: center; font-weight: bold; color: var(--accent); }
+        .assign-timer.safe { color: var(--green); }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <h2>TUKE FEI INF A6</h2>
+    <ul class="course-list">
+        <li><strong>MAIS</strong><a href="https://mais.tuke.sk" class="course-link" target="_blank">Student MAIS →</a>
+            <a href="https://maisportal.tuke.sk/portal/studijneProgramy.mais" class="course-link" target="_blank">MAIS Portal →</a>
+            <a href="https://fei.tuke.sk/sk/archive/clanky/prednasky-pre-studentov-1-rocnika-bc-studia-na-fei-tuke-v-letnom-semestri-ak-roku-20252026" class="course-link" target="_blank">Lecture links →</a></li>
+        <li><strong>Moodle</strong><a href="https://moodle.tuke.sk" class="course-link" target="_blank">TUKE Moodle →</a>
+            <a href="https://moodle.fei.tuke.sk/" class="course-link" target="_blank">KPI Moodle →</a>
+        </li>
+        <li><strong>Maps</strong><a href="https://at.tuke.sk/" class="course-link" target="_blank">TUNA →</a>
+            <a href="https://mapa.fei.tuke.sk/" class="course-link" target="_blank">FEI TUKE Map →</a>
+        </li>
+        <li><strong>PVJC</strong><a href="https://kurzy.kpi.fei.tuke.sk/pvjc/2026/" class="course-link" target="_blank">Open PVJC →</a>
+        </li>
+        <li><strong>MAT II</strong><a href="https://kmti.fei.tuke.sk/predmet/matematika-ii" class="course-link" target="_blank">Open MAT II →</a>
+            <a href="https://tukesk-my.sharepoint.com/:f:/g/personal/jana_fortes_tuke_sk/IgAN-Q-M1DdHRKZRrsZu67kYARJlfJY4noYW_akyT6LR92g?e=ow4rMT" class="course-link" target="_blank">Onedrive Link →</a>
+        </li>
+        <li><strong>ZSI</strong><a href="https://kurzy.kpi.fei.tuke.sk/zsi/" class="course-link" target="_blank">Open ZSI →</a>
+        </li>
+        <li><strong>PPI</strong><a href="http://ppi.madosonline.sk/" class="course-link" target="_blank">Open PPI →</a>
+        </li>
+    </ul>
+</aside>
+
+<div class="main">
+    <div class="status-bar">
+        <div class="status-item"><span>Date & Time</span><strong id="live-clock">--:--:--</strong></div>
+        <div class="status-item"><span>Semester Week</span><strong id="sem-week">--</strong></div>
+        <div class="status-item"><span>Current Activity</span><strong id="current-task">Free</strong></div>
+        <div class="status-item"><span>Coming Up Next</span><strong id="next-task">--</strong><div id="countdown" class="countdown"></div></div>
+    </div>
+
+    <div class="header-flex">
+        <h1>LS 2025/2026 Timetable</h1>
+        <button class="theme-toggle" id="theme-btn">🌙 Dark Mode</button>
+    </div>
+    
+    <table class="timetable">
+        <thead>
+            <tr>
+                <th id="day-1">Monday</th><th id="day-2">Tuesday</th><th id="day-3">Wednesday</th><th id="day-4">Thursday</th><th id="day-5">Friday</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="col-1">
+                    <div class="slot" data-name="Programovanie (Cvičenie)" data-start="09:10" data-end="10:40">
+                        <span class="time">09:10 - 10:40</span> Programovanie (Cvičenie)<br><small>L9-B529</small>
+                    </div>
+                    <div class="slot" data-name="Fyzika I (Cvičenie)" data-start="10:50" data-end="12:20">
+                        <span class="time">10:50 - 12:20</span> Fyzika I (Cvičenie)<br><small>PK4_AVWS</small>
+                    </div>
+                    <div class="slot" data-name="ZSI (Cvičenie)" data-start="15:10" data-end="16:40">
+                        <span class="time">15:10 - 16:40</span> ZSI (Cvičenie)<br><small>L9-B529</small>
+                    </div>
+                </td>
+                <td id="col-2">
+                    <div class="slot" data-name="Matematika II (Cvičenie)" data-start="07:30" data-end="09:00">
+                        <span class="time">07:30 - 09:00</span> Matematika II (Cvičenie)<br><small>PK6_PC5</small>
+                    </div>
+                    <div class="slot online" data-name="ZSI (Prednáška)" data-start="10:50" data-end="12:20">
+                        <span class="time">10:50 - 12:20</span> <strong>ZSI (Prednáška)</strong><br>
+                        <a href="https://teams.microsoft.com/meet/37993941338936?p=LweZOXqWb4F07xSIIC" class="join-btn" target="_blank">Join</a>
+                    </div>
+                </td>
+                <td id="col-3">
+                    <div class="slot online" data-name="Programovanie (Prednáška)" data-start="08:15" data-end="09:45">
+                        <span class="time">08:15 - 09:45</span> <strong>Programovanie (Prednáška)</strong><br>
+                        <small>Heslo: prvaci</small><br>
+                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn" target="_blank">Join</a>
+                    </div>
+                    <div class="slot online" data-name="Matematika II (Prednáška)" data-start="09:55" data-end="11:35">
+                        <span class="time">09:55 - 11:35</span> <strong>Matematika II (Prednáška)</strong><br>
+                        <small>Heslo: prvaci</small><br>
+                        <a href="https://events-tuke.webex.com/events-tuke-en/j.php?MTID=m8a87ca24a9f17e19e6f70ab9e596a75b" class="join-btn" target="_blank">Join</a>
+                    </div>
+                    <div class="slot online" data-name="Fyzika I (Prednáška)" data-start="12:30" data-end="14:00">
+                        <span class="time">12:30 - 14:00</span> <strong>Fyzika I (Prednáška)</strong><br>
+                        <small>Heslo: 3PQq8kj4tYN</small><br>
+                        <a href="https://tuke.webex.com/tuke/k2/j.phpMTID=te715f8292355bbc3a08edef424377012" class="join-btn" target="_blank">Join</a>
+                    </div>
+                    <div class="slot online" data-name="PPI (Prednáška)" data-start="14:15" data-end="15:55">
+                        <span class="time">14:15 - 15:55</span> <strong>PPI (Prednáška)</strong><br>
+                        <a href="https://tuke.webex.com/meet/branislav.mados" class="join-btn">Join</a>
+                    </div>
+                </td>
+                <td id="col-4">
+                    <div class="slot" data-name="PPI (Cvičenie)" data-start="07:30" data-end="09:00">
+                        <span class="time">07:30 - 09:00</span> PPI (Cvičenie)<br><small>PK6_PC2</small>
+                    </div>
+                </td>
+                <td id="col-5">
+                    <div style="text-align: center; color: #999; margin-top: 20px;">
+                        <span id="random-splash">Loading fact...</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="active-assignments-section">
+        <h2>Assignments & Tests</h2>
+        <div class="assignments-grid" id="assignments-container"></div>
+    </div>
+
+    <div id="passed-assignments-section" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 20px;">
+        <h2 style="color: var(--slot-time); font-size: 1.2em;">Passed Assignments</h2>
+        <div class="assignments-grid" id="passed-container"></div>
+    </div>
+</div>
+
+<script>
+    const assignmentsData = [
+        { subject: "Programovanie", task: "Problem Set #1: Top Secret", date: "2026-03-08T23:59" },
+        { subject: "Fyzika I", task: "Zápočtová písomka", date: "2026-04-20T10:50" },
+        { subject: "Základy softvérového inžinierstva", task: "Analýza požiadaviek a konceptuálny návrh", date: "2026-03-30T23:59" },
+        { subject: "Matematika II", task: "Zápočtová písomka 1", date: "2026-03-31T07:30" },
+        { subject: "Matematika II", task: "Zápočtová písomka 2", date: "2026-05-20T07:30" },
+        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 1", date: "2026-03-12T07:30" },
+        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 2", date: "2026-04-16T07:30" }
+    ];
+
+    const splashTexts = [
+        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 10 },
+        { text: "#🇺🇸 Los Angeles is painting its streets white to combat heat. street temperatures drop by 15°F.", weight: 5 },
+        { text: "#🎓 TUKE is turning people into depressed femboys! Using PK4_AVWS, they make you wear thigh highs and cry during Fyzika I.", weight: 1 },
+        { text: "This website is 100% AI Slop, why are you even here?", weight: 2 }, 
+        { text: "Aréna my ass", weight: 2 }
+    ];
+
+    function getMinutes(timeStr) {
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+    }
+
+    function showRandomSplash() {
+        const totalWeight = splashTexts.reduce((sum, item) => sum + item.weight, 0);
+        let random = Math.random() * totalWeight;
+        for (const item of splashTexts) {
+            if (random < item.weight) {
+                document.getElementById('random-splash').innerText = item.text;
+                return;
+            }
+            random -= item.weight;
+        }
+    }
+
+    function updateDashboard() {
+        const now = new Date();
+        const currentDay = now.getDay(); 
+        const currentMins = now.getHours() * 60 + now.getMinutes();
+        
+        document.getElementById('live-clock').innerHTML = `${now.toLocaleDateString('sk-SK')}<br>${now.toLocaleTimeString('en-GB')}`;
+
+        const semStart = new Date('2026-02-16');
+        const semEnd = new Date('2026-05-14');
+        const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
+        document.getElementById('sem-week').innerText = (now >= semStart && now <= semEnd) ? `Week ${weekNum}` : "Holiday";
+
+        document.querySelectorAll('td').forEach(el => el.classList.remove('current-day-col'));
+        document.querySelectorAll('th').forEach(el => el.classList.remove('current-day-header'));
+        if (currentDay >= 1 && currentDay <= 5) {
+            document.getElementById('col-' + currentDay)?.classList.add('current-day-col');
+            document.getElementById('day-' + currentDay)?.classList.add('current-day-header');
+        }
+
+        let allSlots = [];
+        document.querySelectorAll('.slot').forEach(slot => {
+            const parentId = slot.closest('td').id; 
+            const slotDay = parseInt(parentId.replace('col-', ''));
+            const name = slot.dataset.name;
+            
+            // Re-apply the Cvičenie/Prednáška styles dynamically
+            slot.classList.remove('type-cvicenie', 'type-prednaska');
+            if (name.includes("Cvičenie")) slot.classList.add('type-cvicenie');
+            if (name.includes("Prednáška")) slot.classList.add('type-prednaska');
+
+            allSlots.push({
+                element: slot,
+                name: name,
+                day: slotDay,
+                start: getMinutes(slot.dataset.start),
+                end: getMinutes(slot.dataset.end)
+            });
+        });
+
+        const currentWeeklyMins = (currentDay * 1440) + currentMins;
+        let activeSlot = null;
+        let nextSlot = null;
+        let minDiffToNext = Infinity;
+
+        allSlots.forEach(slot => {
+            slot.element.classList.remove('active-now');
+            if (slot.day === currentDay && currentMins >= slot.start && currentMins < slot.end) {
+                activeSlot = slot;
+                slot.element.classList.add('active-now');
+            }
+
+            let slotWeeklyMins = (slot.day * 1440) + slot.start;
+            if (slotWeeklyMins <= currentWeeklyMins) slotWeeklyMins += (7 * 1440); 
+            const diff = slotWeeklyMins - currentWeeklyMins;
+            if (diff > 0 && diff < minDiffToNext) {
+                minDiffToNext = diff;
+                nextSlot = slot;
+            }
+        });
+
+        document.getElementById('current-task').innerHTML = activeSlot ? `${activeSlot.name} <span style='font-size:0.75em; color:var(--accent); display:block; font-weight:bold; text-transform:none;'>Ends in ${activeSlot.end - currentMins}m</span>` : "Free";
+
+        if (nextSlot) {
+            document.getElementById('next-task').innerText = nextSlot.name;
+            const d = Math.floor(minDiffToNext / 1440), h = Math.floor((minDiffToNext % 1440) / 60), m = minDiffToNext % 60;
+            document.getElementById('countdown').innerText = `Starts in ${d > 0 ? d+'d ' : ''}${h > 0 ? h+'h ' : ''}${m}m`;
+        }
+
+        renderAssignments(now);
+    }
+
+    function renderAssignments(now) {
+        const activeContainer = document.getElementById('assignments-container');
+        const passedContainer = document.getElementById('passed-container');
+        const activeList = assignmentsData.filter(item => new Date(item.date) > now).sort((a,b) => new Date(a.date) - new Date(b.date));
+        const passedList = assignmentsData.filter(item => new Date(item.date) <= now).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        const getCard = (item, isPassed) => {
+            const deadline = new Date(item.date);
+            const diff = deadline - now;
+            let timer = "Passed", tClass = "";
+            if (!isPassed) {
+                const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000);
+                timer = `${d}d ${h}h ${m}m`;
+                if (d >= 3) tClass = "safe";
+            }
+            return `<div class="assign-card"><div class="assign-subject">${item.subject}</div><div class="assign-title">${item.task}</div><span class="assign-date">Deadline: ${deadline.toLocaleDateString('sk-SK')}</span><div class="assign-timer ${tClass}">${timer}</div></div>`;
+        };
+
+        activeContainer.innerHTML = activeList.map(i => getCard(i, false)).join('') || "<p>No active assignments! 🎉</p>";
+        passedContainer.innerHTML = passedList.map(i => getCard(i, true)).join('');
+        document.getElementById('passed-assignments-section').style.display = passedList.length ? "block" : "none";
+    }
+
+    // --- THEME BUTTON LOGIC ---
+    const btn = document.getElementById('theme-btn');
+    
+    // Sync button text on load
+    if (localStorage.getItem('dashboard-theme') === 'dark') {
+        btn.innerText = "☀️ Light Mode";
+    }
+
+    btn.addEventListener('click', () => {
+        // Add the transition class ONLY when the user clicks
+        document.body.classList.add('theme-transitioning');
+        
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            btn.innerText = "🌙 Dark Mode";
+            localStorage.setItem('dashboard-theme', 'light');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            btn.innerText = "☀️ Light Mode";
+            localStorage.setItem('dashboard-theme', 'dark');
+        }
+    });
+
+    showRandomSplash();
+    updateDashboard();
+    setInterval(updateDashboard, 1000);
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A6 Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
     <style>
         :root { 
             --primary: #003366; --accent: #e74c3c; --bg: #f0f2f5; --text: #333;
@@ -409,6 +772,7 @@
 </script>
 </body>
 </html>
+
 
 
 
