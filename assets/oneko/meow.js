@@ -2,7 +2,7 @@
 
 const meow = function () {
   var script = document.createElement("script");
-  script.src = "timetable-tuke/assets/oneko/oneko.js";
+  script.src = "/timetable-tuke/assets/oneko/oneko.js";
   script.type = "text/javascript";
   script.onerror = function () {
     console.error("Cat not found.");
