@@ -246,14 +246,29 @@
         const timeStr = now.toLocaleTimeString('en-GB');
         document.getElementById('live-clock').innerHTML = `${dateStr}<br>${timeStr}`;
 
+        // --- UPRAVENÁ LOGIKA PRE SEMESTER / SKÚŠKOVÉ ---
         const semStart = new Date('2026-02-16');
         const semEnd = new Date('2026-05-14');
-        const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
-        document.getElementById('sem-week').innerText = (now >= semStart && now <= semEnd) ? `Week ${weekNum}` : "No classes";
+        const examStart = new Date('2026-05-18');
+        const examEnd = new Date('2026-07-03');
 
+        if (now >= examStart && now <= examEnd) {
+            document.getElementById('sem-week').innerText = "Exam Period";
+        } else if (now >= semStart && now <= semEnd) {
+            const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
+            document.getElementById('sem-week').innerText = `Week ${weekNum}`;
+        } else {
+            document.getElementById('sem-week').innerText = "No classes";
+        }
+
+        // --- UPRAVENÉ ZOBRAZOVANIE ROZVRHU OD 18.5. ---
+        const isExamPeriodActive = now >= examStart;
+
+        // Resetovanie tried na dňoch a hlavičkách (od 18.5. už nezvýrazňujeme aktuálny stĺpec dňa)
         document.querySelectorAll('td').forEach(el => el.classList.remove('current-day-col'));
         document.querySelectorAll('th').forEach(el => el.classList.remove('current-day-header'));
-        if (currentDay >= 1 && currentDay <= 5) {
+        
+        if (currentDay >= 1 && currentDay <= 5 && !isExamPeriodActive) {
             document.getElementById('col-' + currentDay)?.classList.add('current-day-col');
             document.getElementById('day-' + currentDay)?.classList.add('current-day-header');
         }
@@ -274,6 +289,75 @@
             });
         });
 
+        const currentWeeklyMins = (currentDay * 1440) + currentMins;
+        let activeSlot = null;
+        let nextSlot = null;
+        let minDiffToNext = Infinity;
+
+        allSlots.forEach(slot => {
+            // Resetujeme staré štýly zvýraznenia
+            slot.element.classList.remove('active-now', 'type-cvicenie', 'type-prednaska');
+            if (slot.name.includes("Cvičenie")) slot.element.classList.add('type-cvicenie');
+            if (slot.name.includes("Prednáška")) slot.element.classList.add('type-prednaska');
+
+            // Hľadanie aktívneho/nadchádzajúceho slotu beží iba ak NIE JE skúškové
+            if (!isExamPeriodActive) {
+                if (slot.day === currentDay && currentMins >= slot.start && currentMins < slot.end) {
+                    activeSlot = slot;
+                    slot.element.classList.add('active-now');
+                }
+
+                let slotWeeklyMins = (slot.day * 1440) + slot.start;
+                if (slotWeeklyMins <= currentWeeklyMins) {
+                    slotWeeklyMins += (7 * 1440); 
+                }
+
+                const diff = slotWeeklyMins - currentWeeklyMins;
+                if (diff > 0 && diff < minDiffToNext) {
+                    minDiffToNext = diff;
+                    nextSlot = slot;
+                }
+            }
+        });
+
+        // --- UPRAVENÝ STATUS BAR (ZOBRAZENIE AKTIVÍT) ---
+        const currentTaskEl = document.getElementById('current-task');
+        const nextTaskEl = document.getElementById('next-task');
+        const countdownEl = document.getElementById('countdown');
+
+        if (isExamPeriodActive) {
+            // Počas skúškového natvrdo skryjeme bežné hodiny
+            currentTaskEl.innerText = "Free";
+            nextTaskEl.innerText = "--";
+            countdownEl.innerText = "";
+        } else {
+            // Štandardné správanie počas semestra
+            if (activeSlot) {
+                const minsLeft = activeSlot.end - currentMins;
+                currentTaskEl.innerHTML = `${activeSlot.name} <span style='font-size:0.75em; color:var(--accent); display:block; font-weight:bold; text-transform:none;'>Ends in ${minsLeft}m</span>`;
+            } else {
+                currentTaskEl.innerText = "Free";
+            }
+
+            if (nextSlot) {
+                nextTaskEl.innerText = nextSlot.name;
+                const days = Math.floor(minDiffToNext / 1440);
+                const hrs = Math.floor((minDiffToNext % 1440) / 60);
+                const mins = Math.floor(minDiffToNext % 60);
+                
+                let timeString = "";
+                if (days > 0) timeString += `${days}d `;
+                if (hrs > 0) timeString += `${hrs}h `;
+                timeString += `${mins}m`;
+                countdownEl.innerText = `Starts in ${timeString}`;
+            } else {
+                nextTaskEl.innerText = "--";
+                countdownEl.innerText = "";
+            }
+        }
+
+        renderAssignments(now);
+    }
         const currentWeeklyMins = (currentDay * 1440) + currentMins;
         let activeSlot = null;
         let nextSlot = null;
