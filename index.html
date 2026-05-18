@@ -249,7 +249,7 @@
         const semStart = new Date('2026-02-16');
         const semEnd = new Date('2026-05-14');
         const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
-        document.getElementById('sem-week').innerText = (now >= semStart && now <= semEnd) ? `Week ${weekNum}` : "Holiday";
+        document.getElementById('sem-week').innerText = (now >= semStart && now <= semEnd) ? `Week ${weekNum}` : "No classes";
 
         document.querySelectorAll('td').forEach(el => el.classList.remove('current-day-col'));
         document.querySelectorAll('th').forEach(el => el.classList.remove('current-day-header'));
