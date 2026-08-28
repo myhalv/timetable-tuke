@@ -239,10 +239,10 @@ function updateDashboard() {
         document.getElementById('live-clock').innerHTML = `${dateStr}<br>${timeStr}`;
 
         // Definícia termínov
-        const semStart = new Date('2026-02-16');
-        const semEnd = new Date('2026-05-14');
-        const examStart = new Date('2026-05-18');
-        const examEnd = new Date('2026-07-03');
+        const semStart = new Date('2026-09-21');
+        const semEnd = new Date('2026-12-18');
+        const examStart = new Date('2027-01-04');
+        const examEnd = new Date('2027-02-12');
 
         // Čisté porovnanie dátumov (bez času) pre spoľahlivé vypnutie od 18.5.
         const todayClean = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -325,7 +325,7 @@ function updateDashboard() {
         const countdownEl = document.getElementById('countdown');
 
         if (isExamPeriodActive) {
-            currentTaskEl.innerText = "Studying";
+            currentTaskEl.innerText = "None";
             nextTaskEl.innerText = "None";
             countdownEl.innerText = "";
         } else {
