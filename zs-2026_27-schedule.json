@@ -1,0 +1,245 @@
+{
+  "format": "schedulebuilder",
+  "version": 1,
+  "schedule": {
+    "name": "ZS 2026/27",
+    "events": [
+      {
+        "id": "0jdzdt3v",
+        "title": "Operačné systémy",
+        "description": "L9-A514\nIng. Lukáš Brilla, MBA\n03. sk",
+        "color": "#eb2626",
+        "startHour": 10,
+        "startMinute": 50,
+        "endHour": 12,
+        "endMinute": 20,
+        "days": [
+          1
+        ],
+        "colorHistory": {
+          "standard": "#eb2626",
+          "minimal-ink": "#eb2626",
+          "alpine-paper": "#eb2626",
+          "harbor-mist": "#eb2626"
+        }
+      },
+      {
+        "id": "ou8k4uo0",
+        "title": "Údajové štruktúry a algoritmy",
+        "description": "PK4_105 (AVWS)\ndoc. Ing. Slavomír Šimoňák, PhD.",
+        "color": "#ea580c",
+        "startHour": 13,
+        "startMinute": 30,
+        "endHour": 15,
+        "endMinute": 0,
+        "days": [
+          1
+        ],
+        "colorHistory": {
+          "standard": "#ea580c",
+          "minimal-ink": "#ea580c",
+          "alpine-paper": "#ea580c",
+          "harbor-mist": "#ea580c"
+        }
+      },
+      {
+        "id": "u8easoqj",
+        "title": "Objektovo orientované programovanie",
+        "description": "PK4_105 (AVWS)\ndoc. Ing. Martin Tomášek, PhD.",
+        "color": "#ea580c",
+        "startHour": 15,
+        "startMinute": 10,
+        "endHour": 16,
+        "endMinute": 40,
+        "days": [
+          1
+        ],
+        "colorHistory": {
+          "standard": "#ea580c",
+          "minimal-ink": "#ea580c",
+          "alpine-paper": "#ea580c",
+          "harbor-mist": "#ea580c"
+        }
+      },
+      {
+        "id": "eufxq1vf",
+        "title": "Objektovo orientované programovanie",
+        "description": "PK6_S02(PC1)\nIng. Marek Ružička, PhD.\n05. sk",
+        "color": "#eb2626",
+        "startHour": 9,
+        "startMinute": 10,
+        "endHour": 10,
+        "endMinute": 40,
+        "days": [
+          2
+        ],
+        "colorHistory": {
+          "standard": "#eb2626",
+          "minimal-ink": "#eb2626",
+          "alpine-paper": "#eb2626",
+          "harbor-mist": "#eb2626"
+        }
+      },
+      {
+        "id": "g77ivwbp",
+        "title": "Architektúry počítačových systémov",
+        "description": "L9-A532\ndoc. Ing. Norbert Ádám, PhD.\n04. sk",
+        "color": "#eb2626",
+        "startHour": 10,
+        "startMinute": 50,
+        "endHour": 12,
+        "endMinute": 20,
+        "days": [
+          2
+        ],
+        "colorHistory": {
+          "standard": "#eb2626",
+          "minimal-ink": "#eb2626",
+          "alpine-paper": "#eb2626",
+          "harbor-mist": "#eb2626"
+        }
+      },
+      {
+        "id": "kzju1e4c",
+        "title": "Operačné systémy",
+        "description": "N9-201 (ZP1)\ndoc. Ing. Ján Genči, PhD.",
+        "color": "#ea580c",
+        "startHour": 13,
+        "startMinute": 30,
+        "endHour": 15,
+        "endMinute": 0,
+        "days": [
+          2
+        ],
+        "colorHistory": {
+          "standard": "#ea580c",
+          "minimal-ink": "#ea580c",
+          "alpine-paper": "#ea580c",
+          "harbor-mist": "#ea580c"
+        }
+      },
+      {
+        "id": "8ilxr70s",
+        "title": "Údajové štruktúry a algoritmy",
+        "description": "L9-B529\ndoc. Ing. Slavomír Šimoňák, PhD.\n05. sk",
+        "color": "#eb2626",
+        "startHour": 12,
+        "startMinute": 30,
+        "endHour": 14,
+        "endMinute": 0,
+        "days": [
+          3
+        ],
+        "colorHistory": {
+          "standard": "#eb2626",
+          "minimal-ink": "#eb2626",
+          "alpine-paper": "#eb2626",
+          "harbor-mist": "#eb2626"
+        }
+      },
+      {
+        "id": "zqeawd06",
+        "title": "Architektúry počítačových systémov",
+        "description": "N9-201 (ZP1)\ndoc. Ing. Norbert Ádám, PhD.",
+        "color": "#ea580c",
+        "startHour": 14,
+        "startMinute": 15,
+        "endHour": 15,
+        "endMinute": 45,
+        "days": [
+          3
+        ],
+        "colorHistory": {
+          "standard": "#ea580c",
+          "minimal-ink": "#ea580c",
+          "alpine-paper": "#ea580c",
+          "harbor-mist": "#ea580c"
+        }
+      },
+      {
+        "id": "qr0gz0lg",
+        "title": "Diskrétna matematika",
+        "color": "#ea580c",
+        "startHour": 9,
+        "startMinute": 10,
+        "endHour": 11,
+        "endMinute": 35,
+        "days": [
+          5
+        ],
+        "colorHistory": {
+          "standard": "#ea580c",
+          "minimal-ink": "#ea580c",
+          "alpine-paper": "#ea580c",
+          "harbor-mist": "#ea580c"
+        }
+      },
+      {
+        "id": "dsi0iown",
+        "title": "Diskrétna matematika",
+        "color": "#ea580c",
+        "startHour": 11,
+        "startMinute": 35,
+        "endHour": 12,
+        "endMinute": 20,
+        "days": [
+          5
+        ],
+        "colorHistory": {
+          "standard": "#ea580c",
+          "minimal-ink": "#ea580c",
+          "alpine-paper": "#ea580c",
+          "harbor-mist": "#ea580c"
+        }
+      },
+      {
+        "id": "2a6fkyv5",
+        "title": "Diskrétna matematika",
+        "description": "N32_605",
+        "color": "#eb2626",
+        "startHour": 10,
+        "startMinute": 50,
+        "endHour": 12,
+        "endMinute": 20,
+        "days": [
+          3
+        ],
+        "colorHistory": {
+          "standard": "#eb2626",
+          "minimal-ink": "#eb2626",
+          "alpine-paper": "#eb2626",
+          "harbor-mist": "#eb2626"
+        }
+      }
+    ],
+    "themeId": "standard",
+    "isPrimary": true,
+    "settings": {
+      "visibleDays": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "weekStartDay": 1,
+      "startHour": 7,
+      "endHour": 18,
+      "use24h": true,
+      "displayMode": "grid",
+      "viewMode": "weekly",
+      "selectedDay": 1,
+      "axis": "vertical",
+      "outputLayout": "spacious",
+      "showOutputTitle": false,
+      "singleLetterShortcuts": true,
+      "eventAccentBar": false,
+      "eventCollisionLayout": "side-by-side",
+      "builderDensity": "compact",
+      "cornerStyle": "rounded",
+      "showDates": false,
+      "weekMode": "current"
+    },
+    "id": "sch_506f24a98ccf49bd87e5ccc7434a631d"
+  }
+}
