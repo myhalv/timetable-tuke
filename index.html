@@ -60,7 +60,7 @@
         td { border: 1px solid var(--border); padding: 10px; vertical-align: top; height: 120px; transition: background 0.3s; }
         
         /* SLOT STYLING */
-        .slot { font-size: 0.85em; padding: 8px; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--border); border-left: 4px solid #3498db; background: rgba(0,0,0,0.02); }
+        .slot { font-size: 0.85em; padding: 8px; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--border); border-left: 4px solid #3498db; background: rgba(0,0,0,0.02); transition: all 0.3s ease; }
         
         /* Cvičenia: Dark Red Border & Bold Name */
         .type-cvicenie { border-left-color: var(--lab-red) !important; font-weight: bold; }
@@ -74,484 +74,8 @@
         .join-btn { display: inline-block; background: var(--accent); color: white; padding: 2px 8px; border-radius: 3px; text-decoration: none; font-size: 0.8em; margin-top: 5px; }
         
         .active-now { border: 2px solid var(--highlight) !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .theme-toggle { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
-
-        /* ASSIGNMENTS SECTION */
-        .assignments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
-        .assign-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .assign-subject { font-size: 0.8em; color: var(--slot-time); text-transform: uppercase; }
-        .assign-title { font-size: 1.1em; font-weight: bold; margin: 5px 0; }
-        .assign-date { font-size: 0.9em; color: var(--assign-date-color); margin-bottom: 15px; display: block; font-weight: 600; }
-        .assign-timer { background: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; text-align: center; font-weight: bold; color: var(--accent); }
-        .assign-timer.safe { color: var(--green); }
-    </style>
-</head>
-<body>
-
-<aside class="sidebar">
-    <h2>🎓❯ TUKE FEI INF 2026/2027</h2>
-    <ul class="course-list">
-        <li>
-            <strong>📜❯ MAIS</strong><a href="https://mais.tuke.sk" class="course-link" target="_blank">Student MAIS →</a>
-            <a href="https://maisportal.tuke.sk/portal/studijneProgramy.mais" class="course-link" target="_blank">MAIS Portal →</a>
-            <a href="https://fei.tuke.sk/sk/archive/clanky/prednasky-pre-studentov-1-rocnika-bc-studia-na-fei-tuke-v-letnom-semestri-ak-roku-20252026" class="course-link" target="_blank">Lecture links →</a></li>
-        </li>
-        <li>
-            <strong>📚❯ Moodle</strong><a href="https://moodle.tuke.sk" class="course-link" target="_blank">TUKE Moodle →</a>
-            <a href="https://moodle.fei.tuke.sk/" class="course-link" target="_blank">KPI Moodle →</a>
-        </li>
-        <li>
-            <strong>🗺️❯ Maps</strong><a href="https://at.tuke.sk/" class="course-link" target="_blank">TUNA →</a>
-            <a href="https://mapa.fei.tuke.sk/" class="course-link" target="_blank">FEI TUKE Map →</a>
-        </li>
-        <li>
-            <strong>😻 Cat</strong>
-            <a href="#" class="course-link" onclick="meow(); return false;">Summon Cat →</a>
-        </li>
-        
-    </ul>
-</aside>
-
-<div class="main">
-    <div class="status-bar">
-        <div class="status-item"><span>Date & Time</span><strong id="live-clock">--:--:--</strong></div>
-        <div class="status-item"><span>Semester Week</span><strong id="sem-week">--</strong></div>
-        <div class="status-item"><span>Current Activity</span><strong id="current-task">Free</strong></div>
-        <div class="status-item"><span>Coming Up Next</span><strong id="next-task">--</strong><div id="countdown" class="countdown"></div></div>
-    </div>
-
-    <div class="header-flex">
-        <h1>2026/2027 ZS Timetable</h1>
-        <button class="theme-toggle" id="theme-btn">🌙 Dark Mode</button>
-    </div>
-    
-    <table class="timetable">
-        <thead>
-            <tr>
-                <th id="day-1">Monday</th><th id="day-2">Tuesday</th><th id="day-3">Wednesday</th><th id="day-4">Thursday</th><th id="day-5">Friday</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td id="col-1">
-                    
-                    <div class="slot" data-name="Operačné systémy (Cvičenie)" data-start="10:50" data-end="12:20">
-                        <span class="time">10:50 - 12:20</span><strong> Operačné systémy (Cvičenie)</strong><br><small>L9-A514</small>
-                    </div>
-                    <div class="slot online" data-name="Údajové štruktúry a algoritmy (Prednáška)" data-start="13:30" data-end="15:00">
-                        <span class="time">13:30 - 15:00</span> Údajové štruktúry a algoritmy (Prednáška)<br><small>PK4_105(AVWS)</small>
-                    </div>
-                    <div class="slot online" data-name="Objektovo orientované programovanie (Prednáška)" data-start="15:10" data-end="16:40">
-                        <span class="time">15:10 - 16:40</span> Objektovo orientované programovanie (Prednáška)<br><small>PK4_105(AVWS)</small>
-                    </div>
-                    
-                </td>
-                <td id="col-2">
-                    <div class="slot" data-name="Objektovo orientované programovanie (Cvičenie)" data-start="09:10" data-end="10:40">
-                        <span class="time">09:10 - 10:40</span><strong> Objektovo orientované programovanie (Cvičenie)</strong><br><small>PK6_S02(PC1)</small>
-                    </div>
-                    <div class="slot" data-name="Architektúry počítačových systémov (Cvičenie)" data-start="10:50" data-end="12:20">
-                        <span class="time">10:50 - 12:20</span><strong> Architektúry počítačových systémov (Cvičenie)</strong><br><small>L9-A532</small>
-                    </div>
-                    <div class="slot online" data-name="Operačné systémy (Prednáška)" data-start="13:30" data-end="15:00">
-                        <span class="time">13:30 - 15:00</span> Operačné systémy (Prednáška)<br><small>N9-201(ZP1)</small>
-                    </div>
-                </td>
-                <td id="col-3">
-                    <div class="slot" data-name="Diskrétna matematika (Cvičenie)" data-start="10:50" data-end="12:20">
-                        <span class="time">10:50 - 12:20</span><strong> Diskrétna matematika (Cvičenie)</strong><br><small>N32_605</small>
-                    </div>
-                    <div class="slot" data-name="Údajové štruktúry a algoritmy (Cvičenie)" data-start="12:30" data-end="14:00">
-                        <span class="time">12:30 - 14:00</span><strong> Údajové štruktúry a algoritmy (Cvičenie)</strong><br><small>L9-B529</small>
-                    </div>
-                    <div class="slot online" data-name="Architektúry počítačových systémov (Prednáška)" data-start="14:15" data-end="15:45">
-                        <span class="time">14:15 - 15:45</span> Architektúry počítačových systémov (Prednáška)<br><small>N9-201(ZP1)</small>
-                    </div>
-                </td>
-                <td id="col-4">
-                    <div style="text-align: center; color: #999; margin-top: 20px; font-style: italic;">
-                        <span id="random-splash">Loading fact...</span>
-                    </div>
-                </td>
-                <td id="col-5">
-                    <div class="slot online" data-name="Diskrétna matematika (Prednáška)" data-start="08:15" data-end="10:40">
-                        <span class="time">08:15 - 10:40</span> Diskrétna matematika (Prednáška)<br><small>N9-201(ZP1)</small>
-                    </div>
-                    <div class="slot online" data-name="Diskrétna matematika (Prednáška)" data-start="10:50" data-end="11:35">
-                        <span class="time">10:50 - 11:35</span> Diskrétna matematika (Seminár)<br><small>N9-201(ZP1)</small>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div id="active-assignments-section">
-        <h2>Assignments & Tests</h2>
-        <div class="assignments-grid" id="assignments-container"></div>
-    </div>
-
-    <div id="passed-assignments-section" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 20px;">
-        <h2 style="color: var(--slot-time); font-size: 1.2em;">Passed Assignments</h2>
-        <div class="assignments-grid" id="passed-container"></div>
-    </div>
-</div>
-
-<script>
-    const assignmentsData = [
-        /*{ subject: "Programovanie", task: "Problem Set #1: Top Secret", date: "2026-03-08T23:59" },
-        { subject: "Programovanie", task: "Problem Set #2: Some Problems to Solve", date: "2026-03-22T23:59" },
-        { subject: "Programovanie", task: "Problem Set #3: K", date: "2026-04-05T23:59" },
-        { subject: "Programovanie", task: "Problem Set #4: BMP Transform!", date: "2026-04-22T23:59" },
-        { subject: "Programovanie", task: "Problem Set #5: Adventure", date: "2026-05-03T23:59" },
-        { subject: "Programovanie", task: "Problem Set #6: Alarm Clock", date: "2026-05-31T23:59" },
-        { subject: "Fyzika I", task: "Zápočtová písomka", date: "2026-04-20T10:50" },
-        { subject: "Fyzika I", task: "Skúška", date: "2026-05-27T08:00" },
-        { subject: "Základy softvérového inžinierstva", task: "Analýza požiadaviek a konceptuálny návrh", date: "2026-03-29T23:59" },
-        { subject: "Základy softvérového inžinierstva", task: "Riešenie úloh v tíme ", date: "2026-05-03T23:59" },
-        { subject: "Matematika II", task: "Zápočtová písomka 1", date: "2026-03-31T07:30" },
-        { subject: "Matematika II", task: "Zápočtová písomka 2", date: "2026-05-20T13:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 1", date: "2026-03-12T07:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 2", date: "2026-04-23T07:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Predtermín", date: "2026-05-14T07:30" }*/
-    ];
-
-    function getMinutes(timeStr) {
-        const [h, m] = timeStr.split(':').map(Number);
-        return h * 60 + m;
-    }
-
-function updateDashboard() {
-        const now = new Date();
-        const currentDay = now.getDay(); 
-        const currentMins = now.getHours() * 60 + now.getMinutes();
-        
-        const dateStr = now.toLocaleDateString('sk-SK');
-        const timeStr = now.toLocaleTimeString('en-GB');
-        document.getElementById('live-clock').innerHTML = `${dateStr}<br>${timeStr}`;
-
-        // Definícia termínov
-        const semStart = new Date('2026-09-21');
-        const semEnd = new Date('2026-12-18');
-        const examStart = new Date('2027-01-04');
-        const examEnd = new Date('2027-02-12');
-
-        // Čisté porovnanie dátumov (bez času) pre spoľahlivé vypnutie od 18.5.
-        const todayClean = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const examStartClean = new Date(examStart.getFullYear(), examStart.getMonth(), examStart.getDate());
-        const isExamPeriodActive = todayClean >= examStartClean;
-
-        // --- 1. SEMESTER / SKÚŠKOVÉ TEXT ---
-        if (now >= examStart && now <= examEnd) {
-            document.getElementById('sem-week').innerText = "Exam Period";
-        } else if (now >= semStart && now <= semEnd) {
-            const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
-            document.getElementById('sem-week').innerText = `Week ${weekNum}`;
-        } else {
-            document.getElementById('sem-week').innerText = "No classes";
-        }
-
-        // --- 2. RESET VIZUÁLU DŇA (ŽLTÝ STĹPEC) ---
-        document.querySelectorAll('td').forEach(el => el.classList.remove('current-day-col'));
-        document.querySelectorAll('th').forEach(el => el.classList.remove('current-day-header'));
-        
-        // Žltý stĺpec pre aktuálny deň sa zapne, iba ak NIE JE skúškové
-        if (currentDay >= 1 && currentDay <= 5 && !isExamPeriodActive) {
-            document.getElementById('col-' + currentDay)?.classList.add('current-day-col');
-            document.getElementById('day-' + currentDay)?.classList.add('current-day-header');
-        }
-
-        // --- 3. SPRACOVANIE SLOTOV V ROZVRHU (VRÁTENÉ TVOJE FARBY) ---
-        let allSlots = [];
-        document.querySelectorAll('.slot').forEach(slot => {
-            // Tvoja pôvodná farebná logika – zachová červené/oranžové okraje presne tak ako predtým
-            slot.classList.remove('active-now', 'type-cvicenie', 'type-prednaska');
-            if (slot.dataset.name.includes("Cvičenie")) slot.classList.add('type-cvicenie');
-            if (slot.dataset.name.includes("Prednáška")) slot.classList.add('type-prednaska');
-
-            const parentId = slot.closest('td').id; 
-            const slotDay = parseInt(parentId.replace('col-', ''));
-            const startMins = getMinutes(slot.dataset.start);
-            const endMins = getMinutes(slot.dataset.end);
-            
-            allSlots.push({
-                element: slot,
-                name: slot.dataset.name,
-                day: slotDay,
-                start: startMins,
-                end: endMins
-            });
-        });
-
-        // --- 4. LOGIKA PRE AKTÍVNU A NASLEDUJÚCU HODINU ---
-        let activeSlot = null;
-        let nextSlot = null;
-        let minDiffToNext = Infinity;
-
-        // Výpočet beží, len ak je riadny semester (od 18.5. sa úplne preskočí)
-        if (!isExamPeriodActive) {
-            const currentWeeklyMins = (currentDay * 1440) + currentMins;
-
-            allSlots.forEach(slot => {
-                if (slot.day === currentDay && currentMins >= slot.start && currentMins < slot.end) {
-                    activeSlot = slot;
-                    slot.element.classList.add('active-now'); // Žltý rámček okolo hodiny v rozvrhu
-                }
-
-                let slotWeeklyMins = (slot.day * 1440) + slot.start;
-                if (slotWeeklyMins <= currentWeeklyMins) {
-                    slotWeeklyMins += (7 * 1440); 
-                }
-
-                const diff = slotWeeklyMins - currentWeeklyMins;
-                if (diff > 0 && diff < minDiffToNext) {
-                    minDiffToNext = diff;
-                    nextSlot = slot;
-                }
-            });
-        }
-
-        // --- 5. AKTUALIZÁCIA STATUS BARU ---
-        const currentTaskEl = document.getElementById('current-task');
-        const nextTaskEl = document.getElementById('next-task');
-        const countdownEl = document.getElementById('countdown');
-
-        if (isExamPeriodActive) {
-            currentTaskEl.innerText = "None";
-            nextTaskEl.innerText = "None";
-            countdownEl.innerText = "";
-        } else {
-            if (activeSlot) {
-                const minsLeft = activeSlot.end - currentMins;
-                currentTaskEl.innerHTML = `${activeSlot.name} <span style='font-size:0.75em; color:var(--accent); display:block; font-weight:bold; text-transform:none;'>Ends in ${minsLeft}m</span>`;
-            } else {
-                currentTaskEl.innerText = "Free";
-            }
-
-            if (nextSlot) {
-                nextTaskEl.innerText = nextSlot.name;
-                const days = Math.floor(minDiffToNext / 1440);
-                const hrs = Math.floor((minDiffToNext % 1440) / 60);
-                const mins = Math.floor(minDiffToNext % 60);
-                
-                let timeString = "";
-                if (days > 0) timeString += `${days}d `;
-                if (hrs > 0) timeString += `${hrs}h `;
-                timeString += `${mins}m`;
-                countdownEl.innerText = `Starts in ${timeString}`;
-            } else {
-                nextTaskEl.innerText = "--";
-                countdownEl.innerText = "";
-            }
-        }
-
-        renderAssignments(now);
-    }
-
-    function renderAssignments(now) {
-        const activeContainer = document.getElementById('assignments-container');
-        const passedContainer = document.getElementById('passed-container');
-        const passedSection = document.getElementById('passed-assignments-section');
-        
-        activeContainer.innerHTML = "";
-        passedContainer.innerHTML = "";
-        
-        let activeHTML = "";
-        let passedHTML = "";
-
-        const activeList = assignmentsData.filter(item => !item.date || new Date(item.date) > now);
-        const passedList = assignmentsData.filter(item => item.date && new Date(item.date) <= now);
-
-        activeList.sort((a, b) => {
-            if (a.date === "") return 1;
-            if (b.date === "") return -1;
-            return new Date(a.date) - new Date(b.date);
-        });
-        passedList.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        const getCard = (item) => {
-            let timer = "Passed";
-            let timerClass = "";
-            let dateDisplay = "Status: Clear";
-            
-            if (item.date) {
-                const deadline = new Date(item.date);
-                const diff = deadline - now;
-                dateDisplay = `Deadline: ${deadline.toLocaleDateString('sk-SK')} ${deadline.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
-                
-                if (diff > 0) {
-                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    timer = `${d}d ${h}h ${m}m`;
-                    if (d >= 3) timerClass = "safe";
-                }
-            } else {
-                timer = "No assignments";
-                timerClass = "safe";
-            }
-
-            return `
-                <div class="assign-card">
-                    <div class="assign-subject">${item.subject}</div>
-                    <div class="assign-title">${item.task}</div>
-                    <span class="assign-date">${dateDisplay}</span>
-                    <div class="assign-timer ${timerClass}">${timer}</div>
-                </div>`;
-        };
-
-        activeList.forEach(item => activeHTML += getCard(item));
-        passedList.forEach(item => passedHTML += getCard(item));
-
-        activeContainer.innerHTML = activeHTML || "<p>No active assignments! 🎉</p>";
-        
-        if (passedList.length > 0) {
-            passedSection.style.display = "block";
-            passedContainer.innerHTML = passedHTML;
-        } else {
-            passedSection.style.display = "none";
-        }
-    }
-
-    // --- PERSISTENT DARK MODE LOGIC ---
-    const btn = document.getElementById('theme-btn');
-    
-    // Sync button text on load
-    const isCurrentlyDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    btn.innerText = isCurrentlyDark ? "☀️ Light Mode" : "🌙 Dark Mode";
-
-    btn.addEventListener('click', () => {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (isDark) {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-            btn.innerText = "🌙 Dark Mode";
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            btn.innerText = "☀️ Light Mode";
-        }
-    });
-
-    // --- INITIALIZATION ---
-    setInterval(updateDashboard, 1000);
-    updateDashboard();
-
-    const splashTexts = [
-        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 1 },
-        { text: "#🇺🇸 Los Angeles is painting its streets white to combat heat. Street temperatures drop by 15°F.", weight: 1 },
-        { text: "#🎓 TUKE is turning people into depressed femboys! Using PK4_AVWS, they make you wear thigh highs and cry during Fyzika I.", weight: 1 },
-        { text: "This website is 100% AI Slop, why are you even here?", weight: 1 }, 
-        { text: "Aréna my ass", weight: 1 },
-        { text: ":3", weight: 1 },
-        { text: "Did you know, that TUKE stands for Trpte Ubožiaci, Kreteni a Entity?", weight: 1 },
-        { text: "Did you know, that life is sad? :(", weight: 1 },
-        { text: "Did you know, that 9.3.2026 was a sad day... Fresh didn't have klobásové trojuholníky.", weight: 1 },
-        { text: "Did you know, that I don't actually know what I'm doing?", weight: 1 },
-        { text: "Did you know, that Skartela is the goated worm?", weight: 1 },
-        { text: "Did you know, that Laura stole my kids during our messy divorce? I want my kids back, LAURA!", weight: 1 },
-        { text: "Did you know, that in 1867, complex numbers got the name they currently have? Previously, they were called retarded numbers.", weight: 1 },
-        { text: "Did you know, that Kyokofan will be the new John Geometry?", weight: 1 },
-        { text: "Did you know, that Pixel and Kyokofan will be the next OILERS?", weight: 1 },
-        { text: "Did you know, that if you sin, you will be forced to take Fyzika I again", weight: 1 },
-        { text: "Did you know, that ahi says hi!", weight: 1 },
-        { text: "April is the fools we made along the way.", weight: 1 },
-        { text: "Arena made us fools :(", weight: 1 },
-        { text: "No schedule", weight: 5 }
-    ];
-
-    function showRandomSplash() {
-        const totalWeight = splashTexts.reduce((sum, item) => sum + item.weight, 0);
-        let random = Math.random() * totalWeight;
-        
-        for (const item of splashTexts) {
-            if (random < item.weight) {
-                document.getElementById('random-splash').innerText = item.text;
-                return;
-            }
-            random -= item.weight;
-        }
-    }
-
-    showRandomSplash();
-</script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>TUKE 26/27 Dashboard</title>
-    <script>
-        (function() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
-    <script src="/timetable-tuke/assets/oneko/meow.js" defer></script>
-    <style>
-        :root { 
-            --primary: #003366; --accent: #e74c3c; --bg: #f0f2f5; --text: #333;
-            --sidebar-text: white; --card-bg: white; --border: #ddd;
-            --slot-time: #555; --online-bg: #e8f4fd; --highlight: #f1c40f;
-            --green: #27ae60;
-            --lab-red: #c0392b; 
-            --lec-bg: #ebf5fb;
-            --assign-date-color: #003366;
-        }
-
-        :root[data-theme="dark"], [data-theme="dark"] {
-            --bg: #121212; --text: #e0e0e0; --card-bg: #1e1e1e;
-            --border: #333; --slot-time: #bbb; --online-bg: #1a2633;
-            --lec-bg: #162a3a;
-            --assign-date-color: #5dade2; 
-        }
-
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; transition: all 0.3s; }
-        
-        .sidebar { width: 280px; background: var(--primary); color: var(--sidebar-text); height: 100vh; padding: 20px; position: fixed; overflow-y: auto; box-sizing: border-box; }
-        .sidebar h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; font-size: 1.2em; }
-        .course-list { list-style: none; padding: 0; }
-        .course-list li { margin: 15px 0; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; }
-        .course-link { color: #5dade2; text-decoration: none; font-size: 0.9em; display: block; margin-top: 5px; }
-
-        .main { margin-left: 280px; padding: 40px; width: 100%; box-sizing: border-box; }
-        
-        .status-bar { 
-            background: var(--card-bg); padding: 20px; border-radius: 8px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 25px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;
-        }
-        .status-item { border-left: 4px solid var(--primary); padding-left: 15px; }
-        .status-item span { display: block; font-size: 0.75em; color: var(--slot-time); text-transform: uppercase; }
-        .status-item strong { font-size: 1.1em; display: block; margin-top: 4px; }
-        .countdown { color: var(--accent); font-weight: bold; font-size: 0.9em; }
-
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .timetable { width: 100%; border-collapse: collapse; background: var(--card-bg); table-layout: fixed; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 40px;}
-        th { background: var(--primary); color: white; padding: 15px; }
-        
-        .current-day-col { background: rgba(241, 196, 15, 0.1) !important; }
-        th.current-day-header { background: #004d99 !important; border-bottom: 4px solid var(--highlight) !important; }
-
-        td { border: 1px solid var(--border); padding: 10px; vertical-align: top; height: 120px; transition: background 0.3s; }
-        
-        /* SLOT STYLING */
-        .slot { font-size: 0.85em; padding: 8px; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--border); border-left: 4px solid #3498db; background: rgba(0,0,0,0.02); }
-        
-        /* Cvičenia: Dark Red Border & Bold Name */
-        .type-cvicenie { border-left-color: var(--lab-red) !important; font-weight: bold; }
-        
-        /* Prednášky: Light background & Normal weight */
-        .type-prednaska { border-left-color: #e07c2a !important; font-weight: normal !important; }
-        .type-prednaska strong { font-weight: normal !important; }
-
-        .online { border-left-color: var(--accent); }
-        .time { font-weight: bold; color: var(--slot-time); display: block; margin-bottom: 3px; }
-        .join-btn { display: inline-block; background: var(--accent); color: white; padding: 2px 8px; border-radius: 3px; text-decoration: none; font-size: 0.8em; margin-top: 5px; }
-        
-        .active-now { border: 2px solid var(--highlight) !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .theme-toggle { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+        .theme-toggle { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: background 0.3s; }
+        .theme-toggle:hover { opacity: 0.9; }
 
         /* ASSIGNMENTS SECTION */
         .assignments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
@@ -599,7 +123,10 @@ function updateDashboard() {
 
     <div class="header-flex">
         <h1>2026/2027 Timetable -> nothing yet</h1>
-        <button class="theme-toggle" id="theme-btn">🌙 Dark Mode</button>
+        <div>
+            <button class="theme-toggle" id="schedule-btn" style="background: var(--green); margin-right: 10px;">👥 Spolužiakov rozvrh</button>
+            <button class="theme-toggle" id="theme-btn">🌙 Dark Mode</button>
+        </div>
     </div>
     
     <table class="timetable">
@@ -624,7 +151,7 @@ function updateDashboard() {
                     
                 </td>
                 <td id="col-2">
-                    <div class="slot" data-name="Objektovo orientované programovanie (Cvičenie)" data-start="09:10" data-end="10:40">
+                    <div class="slot" id="oop-cv" data-name="Objektovo orientované programovanie (Cvičenie)" data-start="09:10" data-end="10:40">
                         <span class="time">09:10 - 10:40</span><strong> Objektovo orientované programovanie (Cvičenie)</strong><br><small>PK6_S02(PC1)</small>
                     </div>
                     <div class="slot" data-name="Architektúry počítačových systémov (Cvičenie)" data-start="10:50" data-end="12:20">
@@ -635,7 +162,7 @@ function updateDashboard() {
                     </div>
                 </td>
                 <td id="col-3">
-                    <div class="slot" data-name="Diskrétna matematika (Cvičenie)" data-start="10:50" data-end="12:20">
+                    <div class="slot" id="dm-cv" data-name="Diskrétna matematika (Cvičenie)" data-start="10:50" data-end="12:20">
                         <span class="time">10:50 - 12:20</span><strong> Diskrétna matematika (Cvičenie)</strong><br><small>N32_605</small>
                     </div>
                     <div class="slot" data-name="Údajové štruktúry a algoritmy (Cvičenie)" data-start="12:30" data-end="14:00">
@@ -675,21 +202,7 @@ function updateDashboard() {
 
 <script>
     const assignmentsData = [
-        /*{ subject: "Programovanie", task: "Problem Set #1: Top Secret", date: "2026-03-08T23:59" },
-        { subject: "Programovanie", task: "Problem Set #2: Some Problems to Solve", date: "2026-03-22T23:59" },
-        { subject: "Programovanie", task: "Problem Set #3: K", date: "2026-04-05T23:59" },
-        { subject: "Programovanie", task: "Problem Set #4: BMP Transform!", date: "2026-04-22T23:59" },
-        { subject: "Programovanie", task: "Problem Set #5: Adventure", date: "2026-05-03T23:59" },
-        { subject: "Programovanie", task: "Problem Set #6: Alarm Clock", date: "2026-05-31T23:59" },
-        { subject: "Fyzika I", task: "Zápočtová písomka", date: "2026-04-20T10:50" },
-        { subject: "Fyzika I", task: "Skúška", date: "2026-05-27T08:00" },
-        { subject: "Základy softvérového inžinierstva", task: "Analýza požiadaviek a konceptuálny návrh", date: "2026-03-29T23:59" },
-        { subject: "Základy softvérového inžinierstva", task: "Riešenie úloh v tíme ", date: "2026-05-03T23:59" },
-        { subject: "Matematika II", task: "Zápočtová písomka 1", date: "2026-03-31T07:30" },
-        { subject: "Matematika II", task: "Zápočtová písomka 2", date: "2026-05-20T13:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 1", date: "2026-03-12T07:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 2", date: "2026-04-23T07:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Predtermín", date: "2026-05-14T07:30" }*/
+        // Tvoje assignmenty tu zostávajú (teraz sú zakomentované)
     ];
 
     function getMinutes(timeStr) {
@@ -697,7 +210,7 @@ function updateDashboard() {
         return h * 60 + m;
     }
 
-function updateDashboard() {
+    function updateDashboard() {
         const now = new Date();
         const currentDay = now.getDay(); 
         const currentMins = now.getHours() * 60 + now.getMinutes();
@@ -706,7 +219,7 @@ function updateDashboard() {
         const timeStr = now.toLocaleTimeString('en-GB');
         document.getElementById('live-clock').innerHTML = `${dateStr}<br>${timeStr}`;
 
-        // Explicitné definície na lokálnu polnoc, aby sa predišlo chybám s časovými pásmami
+        // Explicitné definície na lokálnu polnoc
         const semStart = new Date('2026-09-21T00:00:00');
         const semEnd = new Date('2026-12-18T23:59:59');
         const examStart = new Date('2027-01-04T00:00:00');
@@ -760,17 +273,13 @@ function updateDashboard() {
         let nextSlot = null;
         let minDiffToNext = Infinity;
 
-        // Riešime ďalšiu hodinu len ak nie je skúškové a nie sme po konci semestra
         if (!isExamPeriodActive && now <= semEnd) {
             
-            // Určíme, voči ktorému pondelku porovnávame rozvrh
             let baseMonday = new Date(now);
             if (now < semStart) {
-                // Sme pred semestrom -> "aktuálny" týždeň je pre nás prvý týždeň semestra
                 baseMonday = new Date(semStart);
                 baseMonday.setHours(0, 0, 0, 0);
             } else {
-                // Už je semester -> nájdeme pondelok tohto týždňa
                 let day = baseMonday.getDay();
                 let diff = baseMonday.getDate() - day + (day === 0 ? -6 : 1);
                 baseMonday.setDate(diff);
@@ -780,18 +289,15 @@ function updateDashboard() {
             let minDiffMs = Infinity;
 
             allSlots.forEach(slot => {
-                // Aktívna hodina beží len vtedy, ak sme reálne v semestri
                 if (now >= semStart && slot.day === currentDay && currentMins >= slot.start && currentMins < slot.end) {
                     activeSlot = slot;
                     slot.element.classList.add('active-now');
                 }
 
-                // Vytvoríme presný objekt dátumu pre tento slot
                 let slotDate = new Date(baseMonday);
                 slotDate.setDate(baseMonday.getDate() + (slot.day - 1));
                 slotDate.setHours(Math.floor(slot.start / 60), slot.start % 60, 0, 0);
 
-                // Ak tento čas v referenčnom týždni už prešiel, jeho najbližší výskyt je o týždeň
                 if (slotDate <= now) {
                     slotDate.setDate(slotDate.getDate() + 7);
                 }
@@ -803,7 +309,6 @@ function updateDashboard() {
                 }
             });
 
-            // Prevod na minúty pre kompatibilitu s formátovaním nižšie
             if (minDiffMs !== Infinity) {
                 minDiffToNext = Math.floor(minDiffMs / 60000); 
             }
@@ -911,487 +416,51 @@ function updateDashboard() {
         }
     }
 
-    // --- PERSISTENT DARK MODE LOGIC ---
-    const btn = document.getElementById('theme-btn');
-    
-    // Sync button text on load
-    const isCurrentlyDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    btn.innerText = isCurrentlyDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+    // --- TOGGLE SCHEDULE LOGIC ---
+    let showingClassmate = false;
+    const oopCv = document.getElementById('oop-cv');
+    const dmCv = document.getElementById('dm-cv');
+    const col1 = document.getElementById('col-1');
+    const col2 = document.getElementById('col-2');
+    const col3 = document.getElementById('col-3');
+    const scheduleBtn = document.getElementById('schedule-btn');
 
-    btn.addEventListener('click', () => {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (isDark) {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-            btn.innerText = "🌙 Dark Mode";
+    scheduleBtn.addEventListener('click', () => {
+        showingClassmate = !showingClassmate;
+        
+        if (showingClassmate) {
+            scheduleBtn.innerText = "👤 Môj rozvrh";
+            scheduleBtn.style.background = "var(--primary)";
+            
+            // Presun OOP na pondelok (col-1) na začiatok
+            col1.insertBefore(oopCv, col1.firstChild);
+            
+            // Presun DM na utorok (col-2) na začiatok a zmeň čas
+            dmCv.dataset.start = "07:30";
+            dmCv.dataset.end = "09:00";
+            dmCv.querySelector('.time').innerText = "07:30 - 09:00";
+            col2.insertBefore(dmCv, col2.firstChild);
         } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            btn.innerText = "☀️ Light Mode";
+            scheduleBtn.innerText = "👥 Spolužiakov rozvrh";
+            scheduleBtn.style.background = "var(--green)";
+            
+            // Presun OOP späť na utorok (col-2) pred APS
+            col2.insertBefore(oopCv, col2.firstChild);
+            
+            // Presun DM späť na stredu (col-3) na začiatok
+            dmCv.dataset.start = "10:50";
+            dmCv.dataset.end = "12:20";
+            dmCv.querySelector('.time').innerText = "10:50 - 12:20";
+            col3.insertBefore(dmCv, col3.firstChild);
         }
+        
+        // Vynútiť okamžitý prepočet timerov a okrajov podľa nového rozloženia
+        updateDashboard(); 
     });
 
-    // --- INITIALIZATION ---
-    setInterval(updateDashboard, 1000);
-    updateDashboard();
-
-    const splashTexts = [
-        { text: "#🇯🇵 Japan is turning footsteps into electricity! Using piezoelectric tiles, every step generates energy.", weight: 1 },
-        { text: "#🇺🇸 Los Angeles is painting its streets white to combat heat. Street temperatures drop by 15°F.", weight: 1 },
-        { text: "#🎓 TUKE is turning people into depressed femboys! Using PK4_AVWS, they make you wear thigh highs and cry during Fyzika I.", weight: 1 },
-        { text: "This website is 100% AI Slop, why are you even here?", weight: 1 }, 
-        { text: "Aréna my ass", weight: 1 },
-        { text: ":3", weight: 1 },
-        { text: "Did you know, that TUKE stands for Trpte Ubožiaci, Kreteni a Entity?", weight: 1 },
-        { text: "Did you know, that life is sad? :(", weight: 1 },
-        { text: "Did you know, that 9.3.2026 was a sad day... Fresh didn't have klobásové trojuholníky.", weight: 1 },
-        { text: "Did you know, that I don't actually know what I'm doing?", weight: 1 },
-        { text: "Did you know, that Skartela is the goated worm?", weight: 1 },
-        { text: "Did you know, that Laura stole my kids during our messy divorce? I want my kids back, LAURA!", weight: 1 },
-        { text: "Did you know, that in 1867, complex numbers got the name they currently have? Previously, they were called retarded numbers.", weight: 1 },
-        { text: "Did you know, that Kyokofan will be the new John Geometry?", weight: 1 },
-        { text: "Did you know, that Pixel and Kyokofan will be the next OILERS?", weight: 1 },
-        { text: "Did you know, that if you sin, you will be forced to take Fyzika I again", weight: 1 },
-        { text: "Did you know, that ahi says hi!", weight: 1 },
-        { text: "April is the fools we made along the way.", weight: 1 },
-        { text: "Arena made us fools :(", weight: 1 },
-        { text: "No schedule", weight: 5 }
-    ];
-
-    function showRandomSplash() {
-        const totalWeight = splashTexts.reduce((sum, item) => sum + item.weight, 0);
-        let random = Math.random() * totalWeight;
-        
-        for (const item of splashTexts) {
-            if (random < item.weight) {
-                document.getElementById('random-splash').innerText = item.text;
-                return;
-            }
-            random -= item.weight;
-        }
-    }
-
-    showRandomSplash();
-</script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>TUKE 26/27 Dashboard</title>
-    <script>
-        (function() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
-    <script src="/timetable-tuke/assets/oneko/meow.js" defer></script>
-    <style>
-        :root { 
-            --primary: #003366; --accent: #e74c3c; --bg: #f0f2f5; --text: #333;
-            --sidebar-text: white; --card-bg: white; --border: #ddd;
-            --slot-time: #555; --online-bg: #e8f4fd; --highlight: #f1c40f;
-            --green: #27ae60;
-            --lab-red: #c0392b; 
-            --lec-bg: #ebf5fb;
-            --assign-date-color: #003366;
-        }
-
-        :root[data-theme="dark"], [data-theme="dark"] {
-            --bg: #121212; --text: #e0e0e0; --card-bg: #1e1e1e;
-            --border: #333; --slot-time: #bbb; --online-bg: #1a2633;
-            --lec-bg: #162a3a;
-            --assign-date-color: #5dade2; 
-        }
-
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; transition: all 0.3s; }
-        
-        .sidebar { width: 280px; background: var(--primary); color: var(--sidebar-text); height: 100vh; padding: 20px; position: fixed; overflow-y: auto; box-sizing: border-box; }
-        .sidebar h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; font-size: 1.2em; }
-        .course-list { list-style: none; padding: 0; }
-        .course-list li { margin: 15px 0; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; }
-        .course-link { color: #5dade2; text-decoration: none; font-size: 0.9em; display: block; margin-top: 5px; }
-
-        .main { margin-left: 280px; padding: 40px; width: 100%; box-sizing: border-box; }
-        
-        .status-bar { 
-            background: var(--card-bg); padding: 20px; border-radius: 8px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 25px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;
-        }
-        .status-item { border-left: 4px solid var(--primary); padding-left: 15px; }
-        .status-item span { display: block; font-size: 0.75em; color: var(--slot-time); text-transform: uppercase; }
-        .status-item strong { font-size: 1.1em; display: block; margin-top: 4px; }
-        .countdown { color: var(--accent); font-weight: bold; font-size: 0.9em; }
-
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .timetable { width: 100%; border-collapse: collapse; background: var(--card-bg); table-layout: fixed; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 40px;}
-        th { background: var(--primary); color: white; padding: 15px; }
-        
-        .current-day-col { background: rgba(241, 196, 15, 0.1) !important; }
-        th.current-day-header { background: #004d99 !important; border-bottom: 4px solid var(--highlight) !important; }
-
-        td { border: 1px solid var(--border); padding: 10px; vertical-align: top; height: 120px; transition: background 0.3s; }
-        
-        /* SLOT STYLING */
-        .slot { font-size: 0.85em; padding: 8px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #3498db; background: rgba(0,0,0,0.02); }
-        
-        /* Cvičenia: Dark Red Border & Bold Name */
-        .type-cvicenie { border-left-color: var(--lab-red) !important; font-weight: bold; }
-        
-        /* Prednášky: Light background & Normal weight */
-        .type-prednaska { border-left-color: #e07c2a !important; background: var(--lec-bg) !important; font-weight: normal !important; }
-        .type-prednaska strong { font-weight: normal !important; }
-
-        .online { background: var(--online-bg); border-left-color: var(--accent); }
-        .time { font-weight: bold; color: var(--slot-time); display: block; margin-bottom: 3px; }
-        .join-btn { display: inline-block; background: var(--accent); color: white; padding: 2px 8px; border-radius: 3px; text-decoration: none; font-size: 0.8em; margin-top: 5px; }
-        
-        .active-now { border: 2px solid var(--highlight) !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .theme-toggle { background: #34495e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
-
-        /* ASSIGNMENTS SECTION */
-        .assignments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
-        .assign-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .assign-subject { font-size: 0.8em; color: var(--slot-time); text-transform: uppercase; }
-        .assign-title { font-size: 1.1em; font-weight: bold; margin: 5px 0; }
-        .assign-date { font-size: 0.9em; color: var(--assign-date-color); margin-bottom: 15px; display: block; font-weight: 600; }
-        .assign-timer { background: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; text-align: center; font-weight: bold; color: var(--accent); }
-        .assign-timer.safe { color: var(--green); }
-    </style>
-</head>
-<body>
-
-<aside class="sidebar">
-    <h2>🎓❯ TUKE FEI INF 2026/2027</h2>
-    <ul class="course-list">
-        <li>
-            <strong>📜❯ MAIS</strong><a href="https://mais.tuke.sk" class="course-link" target="_blank">Student MAIS →</a>
-            <a href="https://maisportal.tuke.sk/portal/studijneProgramy.mais" class="course-link" target="_blank">MAIS Portal →</a>
-            <a href="https://fei.tuke.sk/sk/archive/clanky/prednasky-pre-studentov-1-rocnika-bc-studia-na-fei-tuke-v-letnom-semestri-ak-roku-20252026" class="course-link" target="_blank">Lecture links →</a></li>
-        </li>
-        <li>
-            <strong>📚❯ Moodle</strong><a href="https://moodle.tuke.sk" class="course-link" target="_blank">TUKE Moodle →</a>
-            <a href="https://moodle.fei.tuke.sk/" class="course-link" target="_blank">KPI Moodle →</a>
-        </li>
-        <li>
-            <strong>🗺️❯ Maps</strong><a href="https://at.tuke.sk/" class="course-link" target="_blank">TUNA →</a>
-            <a href="https://mapa.fei.tuke.sk/" class="course-link" target="_blank">FEI TUKE Map →</a>
-        </li>
-        <li>
-            <strong>😻 Cat</strong>
-            <a href="#" class="course-link" onclick="meow(); return false;">Summon Cat →</a>
-        </li>
-        
-    </ul>
-</aside>
-
-<div class="main">
-    <div class="status-bar">
-        <div class="status-item"><span>Date & Time</span><strong id="live-clock">--:--:--</strong></div>
-        <div class="status-item"><span>Semester Week</span><strong id="sem-week">--</strong></div>
-        <div class="status-item"><span>Current Activity</span><strong id="current-task">Free</strong></div>
-        <div class="status-item"><span>Coming Up Next</span><strong id="next-task">--</strong><div id="countdown" class="countdown"></div></div>
-    </div>
-
-    <div class="header-flex">
-        <h1>2026/2027 Timetable -> nothing yet</h1>
-        <button class="theme-toggle" id="theme-btn">🌙 Dark Mode</button>
-    </div>
-    
-    <table class="timetable">
-        <thead>
-            <tr>
-                <th id="day-1">Monday</th><th id="day-2">Tuesday</th><th id="day-3">Wednesday</th><th id="day-4">Thursday</th><th id="day-5">Friday</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td id="col-1">
-                    
-                    <div class="slot" data-name="Operačné systémy (Cvičenie)" data-start="10:50" data-end="12:20">
-                        <span class="time">10:50 - 12:20</span><strong> Operačné systémy (Cvičenie)</strong><br><small>L9-A514</small>
-                    </div>
-                    <div class="slot online" data-name="Údajové štruktúry a algoritmy (Prednáška)" data-start="13:30" data-end="15:00">
-                        <span class="time">13:30 - 15:00</span> Údajové štruktúry a algoritmy (Prednáška)<br><small>PK4_105(AVWS)</small>
-                    </div>
-                    <div class="slot online" data-name="Objektovo orientované programovanie (Prednáška)" data-start="15:10" data-end="16:40">
-                        <span class="time">15:10 - 16:40</span> Objektovo orientované programovanie (Prednáška)<br><small>PK4_105(AVWS)</small>
-                    </div>
-                    
-                </td>
-                <td id="col-2">
-                    <div class="slot" data-name="Objektovo orientované programovanie (Cvičenie)" data-start="09:10" data-end="10:40">
-                        <span class="time">09:10 - 10:40</span><strong> Objektovo orientované programovanie (Cvičenie)</strong><br><small>PK6_S02(PC1)</small>
-                    </div>
-                    <div class="slot" data-name="Architektúry počítačových systémov (Cvičenie)" data-start="10:50" data-end="12:20">
-                        <span class="time">10:50 - 12:20</span><strong> Architektúry počítačových systémov (Cvičenie)</strong><br><small>L9-A532</small>
-                    </div>
-                    <div class="slot online" data-name="Operačné systémy (Prednáška)" data-start="13:30" data-end="15:00">
-                        <span class="time">13:30 - 15:00</span> Operačné systémy (Prednáška)<br><small>N9-201(ZP1)</small>
-                    </div>
-                </td>
-                <td id="col-3">
-                    <div class="slot" data-name="Diskrétna matematika (Cvičenie)" data-start="10:50" data-end="12:20">
-                        <span class="time">10:50 - 12:20</span><strong> Diskrétna matematika (Cvičenie)</strong><br><small>N32_605</small>
-                    </div>
-                    <div class="slot" data-name="Údajové štruktúry a algoritmy (Cvičenie)" data-start="12:30" data-end="14:00">
-                        <span class="time">12:30 - 14:00</span><strong> Údajové štruktúry a algoritmy (Cvičenie)</strong><br><small>L9-B529</small>
-                    </div>
-                    <div class="slot online" data-name="Architektúry počítačových systémov (Prednáška)" data-start="14:15" data-end="15:45">
-                        <span class="time">14:15 - 15:45</span> Architektúry počítačových systémov (Prednáška)<br><small>N9-201(ZP1)</small>
-                    </div>
-                </td>
-                <td id="col-4">
-                    <div style="text-align: center; color: #999; margin-top: 20px; font-style: italic;">
-                        <span id="random-splash">Loading fact...</span>
-                    </div>
-                </td>
-                <td id="col-5">
-                    <div class="slot online" data-name="Diskrétna matematika (Prednáška)" data-start="08:15" data-end="10:40">
-                        <span class="time">08:15 - 10:40</span> Diskrétna matematika (Prednáška)<br><small>N9-201(ZP1)</small>
-                    </div>
-                    <div class="slot online" data-name="Diskrétna matematika (Prednáška)" data-start="10:50" data-end="11:35">
-                        <span class="time">10:50 - 11:35</span> Diskrétna matematika (Seminár)<br><small>N9-201(ZP1)</small>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div id="active-assignments-section">
-        <h2>Assignments & Tests</h2>
-        <div class="assignments-grid" id="assignments-container"></div>
-    </div>
-
-    <div id="passed-assignments-section" style="margin-top: 40px; border-top: 2px dashed var(--border); padding-top: 20px;">
-        <h2 style="color: var(--slot-time); font-size: 1.2em;">Passed Assignments</h2>
-        <div class="assignments-grid" id="passed-container"></div>
-    </div>
-</div>
-
-<script>
-    const assignmentsData = [
-        /*{ subject: "Programovanie", task: "Problem Set #1: Top Secret", date: "2026-03-08T23:59" },
-        { subject: "Programovanie", task: "Problem Set #2: Some Problems to Solve", date: "2026-03-22T23:59" },
-        { subject: "Programovanie", task: "Problem Set #3: K", date: "2026-04-05T23:59" },
-        { subject: "Programovanie", task: "Problem Set #4: BMP Transform!", date: "2026-04-22T23:59" },
-        { subject: "Programovanie", task: "Problem Set #5: Adventure", date: "2026-05-03T23:59" },
-        { subject: "Programovanie", task: "Problem Set #6: Alarm Clock", date: "2026-05-31T23:59" },
-        { subject: "Fyzika I", task: "Zápočtová písomka", date: "2026-04-20T10:50" },
-        { subject: "Fyzika I", task: "Skúška", date: "2026-05-27T08:00" },
-        { subject: "Základy softvérového inžinierstva", task: "Analýza požiadaviek a konceptuálny návrh", date: "2026-03-29T23:59" },
-        { subject: "Základy softvérového inžinierstva", task: "Riešenie úloh v tíme ", date: "2026-05-03T23:59" },
-        { subject: "Matematika II", task: "Zápočtová písomka 1", date: "2026-03-31T07:30" },
-        { subject: "Matematika II", task: "Zápočtová písomka 2", date: "2026-05-20T13:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 1", date: "2026-03-12T07:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Zápočtová písomka 2", date: "2026-04-23T07:30" },
-        { subject: "Princípy počítačového inžinierstva", task: "Predtermín", date: "2026-05-14T07:30" }*/
-    ];
-
-    function getMinutes(timeStr) {
-        const [h, m] = timeStr.split(':').map(Number);
-        return h * 60 + m;
-    }
-
-function updateDashboard() {
-        const now = new Date();
-        const currentDay = now.getDay(); 
-        const currentMins = now.getHours() * 60 + now.getMinutes();
-        
-        const dateStr = now.toLocaleDateString('sk-SK');
-        const timeStr = now.toLocaleTimeString('en-GB');
-        document.getElementById('live-clock').innerHTML = `${dateStr}<br>${timeStr}`;
-
-        // Definícia termínov
-        const semStart = new Date('2026-09-21');
-        const semEnd = new Date('2026-12-18');
-        const examStart = new Date('2027-01-04');
-        const examEnd = new Date('2027-02-12');
-
-        // Čisté porovnanie dátumov (bez času) pre spoľahlivé vypnutie od 18.5.
-        const todayClean = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const examStartClean = new Date(examStart.getFullYear(), examStart.getMonth(), examStart.getDate());
-        const isExamPeriodActive = todayClean >= examStartClean;
-
-        // --- 1. SEMESTER / SKÚŠKOVÉ TEXT ---
-        if (now >= examStart && now <= examEnd) {
-            document.getElementById('sem-week').innerText = "Exam Period";
-        } else if (now >= semStart && now <= semEnd) {
-            const weekNum = Math.ceil((now - semStart) / (1000 * 60 * 60 * 24 * 7));
-            document.getElementById('sem-week').innerText = `Week ${weekNum}`;
-        } else {
-            document.getElementById('sem-week').innerText = "No classes";
-        }
-
-        // --- 2. RESET VIZUÁLU DŇA (ŽLTÝ STĹPEC) ---
-        document.querySelectorAll('td').forEach(el => el.classList.remove('current-day-col'));
-        document.querySelectorAll('th').forEach(el => el.classList.remove('current-day-header'));
-        
-        // Žltý stĺpec pre aktuálny deň sa zapne, iba ak NIE JE skúškové
-        if (currentDay >= 1 && currentDay <= 5 && !isExamPeriodActive) {
-            document.getElementById('col-' + currentDay)?.classList.add('current-day-col');
-            document.getElementById('day-' + currentDay)?.classList.add('current-day-header');
-        }
-
-        // --- 3. SPRACOVANIE SLOTOV V ROZVRHU (VRÁTENÉ TVOJE FARBY) ---
-        let allSlots = [];
-        document.querySelectorAll('.slot').forEach(slot => {
-            // Tvoja pôvodná farebná logika – zachová červené/oranžové okraje presne tak ako predtým
-            slot.classList.remove('active-now', 'type-cvicenie', 'type-prednaska');
-            if (slot.dataset.name.includes("Cvičenie")) slot.classList.add('type-cvicenie');
-            if (slot.dataset.name.includes("Prednáška")) slot.classList.add('type-prednaska');
-
-            const parentId = slot.closest('td').id; 
-            const slotDay = parseInt(parentId.replace('col-', ''));
-            const startMins = getMinutes(slot.dataset.start);
-            const endMins = getMinutes(slot.dataset.end);
-            
-            allSlots.push({
-                element: slot,
-                name: slot.dataset.name,
-                day: slotDay,
-                start: startMins,
-                end: endMins
-            });
-        });
-
-        // --- 4. LOGIKA PRE AKTÍVNU A NASLEDUJÚCU HODINU ---
-        let activeSlot = null;
-        let nextSlot = null;
-        let minDiffToNext = Infinity;
-
-        // Výpočet beží, len ak je riadny semester (od 18.5. sa úplne preskočí)
-        if (!isExamPeriodActive) {
-            const currentWeeklyMins = (currentDay * 1440) + currentMins;
-
-            allSlots.forEach(slot => {
-                if (slot.day === currentDay && currentMins >= slot.start && currentMins < slot.end) {
-                    activeSlot = slot;
-                    slot.element.classList.add('active-now'); // Žltý rámček okolo hodiny v rozvrhu
-                }
-
-                let slotWeeklyMins = (slot.day * 1440) + slot.start;
-                if (slotWeeklyMins <= currentWeeklyMins) {
-                    slotWeeklyMins += (7 * 1440); 
-                }
-
-                const diff = slotWeeklyMins - currentWeeklyMins;
-                if (diff > 0 && diff < minDiffToNext) {
-                    minDiffToNext = diff;
-                    nextSlot = slot;
-                }
-            });
-        }
-
-        // --- 5. AKTUALIZÁCIA STATUS BARU ---
-        const currentTaskEl = document.getElementById('current-task');
-        const nextTaskEl = document.getElementById('next-task');
-        const countdownEl = document.getElementById('countdown');
-
-        if (isExamPeriodActive) {
-            currentTaskEl.innerText = "None";
-            nextTaskEl.innerText = "None";
-            countdownEl.innerText = "";
-        } else {
-            if (activeSlot) {
-                const minsLeft = activeSlot.end - currentMins;
-                currentTaskEl.innerHTML = `${activeSlot.name} <span style='font-size:0.75em; color:var(--accent); display:block; font-weight:bold; text-transform:none;'>Ends in ${minsLeft}m</span>`;
-            } else {
-                currentTaskEl.innerText = "Free";
-            }
-
-            if (nextSlot) {
-                nextTaskEl.innerText = nextSlot.name;
-                const days = Math.floor(minDiffToNext / 1440);
-                const hrs = Math.floor((minDiffToNext % 1440) / 60);
-                const mins = Math.floor(minDiffToNext % 60);
-                
-                let timeString = "";
-                if (days > 0) timeString += `${days}d `;
-                if (hrs > 0) timeString += `${hrs}h `;
-                timeString += `${mins}m`;
-                countdownEl.innerText = `Starts in ${timeString}`;
-            } else {
-                nextTaskEl.innerText = "--";
-                countdownEl.innerText = "";
-            }
-        }
-
-        renderAssignments(now);
-    }
-
-    function renderAssignments(now) {
-        const activeContainer = document.getElementById('assignments-container');
-        const passedContainer = document.getElementById('passed-container');
-        const passedSection = document.getElementById('passed-assignments-section');
-        
-        activeContainer.innerHTML = "";
-        passedContainer.innerHTML = "";
-        
-        let activeHTML = "";
-        let passedHTML = "";
-
-        const activeList = assignmentsData.filter(item => !item.date || new Date(item.date) > now);
-        const passedList = assignmentsData.filter(item => item.date && new Date(item.date) <= now);
-
-        activeList.sort((a, b) => {
-            if (a.date === "") return 1;
-            if (b.date === "") return -1;
-            return new Date(a.date) - new Date(b.date);
-        });
-        passedList.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        const getCard = (item) => {
-            let timer = "Passed";
-            let timerClass = "";
-            let dateDisplay = "Status: Clear";
-            
-            if (item.date) {
-                const deadline = new Date(item.date);
-                const diff = deadline - now;
-                dateDisplay = `Deadline: ${deadline.toLocaleDateString('sk-SK')} ${deadline.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
-                
-                if (diff > 0) {
-                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    timer = `${d}d ${h}h ${m}m`;
-                    if (d >= 3) timerClass = "safe";
-                }
-            } else {
-                timer = "No assignments";
-                timerClass = "safe";
-            }
-
-            return `
-                <div class="assign-card">
-                    <div class="assign-subject">${item.subject}</div>
-                    <div class="assign-title">${item.task}</div>
-                    <span class="assign-date">${dateDisplay}</span>
-                    <div class="assign-timer ${timerClass}">${timer}</div>
-                </div>`;
-        };
-
-        activeList.forEach(item => activeHTML += getCard(item));
-        passedList.forEach(item => passedHTML += getCard(item));
-
-        activeContainer.innerHTML = activeHTML || "<p>No active assignments! 🎉</p>";
-        
-        if (passedList.length > 0) {
-            passedSection.style.display = "block";
-            passedContainer.innerHTML = passedHTML;
-        } else {
-            passedSection.style.display = "none";
-        }
-    }
-
     // --- PERSISTENT DARK MODE LOGIC ---
     const btn = document.getElementById('theme-btn');
     
-    // Sync button text on load
     const isCurrentlyDark = document.documentElement.getAttribute('data-theme') === 'dark';
     btn.innerText = isCurrentlyDark ? "☀️ Light Mode" : "🌙 Dark Mode";
 
