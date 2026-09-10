@@ -417,7 +417,7 @@
     }
 
     // --- TOGGLE SCHEDULE LOGIC ---
-    let showingClassmate = false;
+    let showingClassmate = localStorage.getItem('schedule') === 'classmate';
     const oopCv = document.getElementById('oop-cv');
     const dmCv = document.getElementById('dm-cv');
     const col1 = document.getElementById('col-1');
@@ -425,10 +425,8 @@
     const col3 = document.getElementById('col-3');
     const scheduleBtn = document.getElementById('schedule-btn');
 
-    scheduleBtn.addEventListener('click', () => {
-        showingClassmate = !showingClassmate;
-        
-        if (showingClassmate) {
+    function applySchedule(isClassmate) {
+        if (isClassmate) {
             scheduleBtn.innerText = "👤 Mišo/Sebo";
             scheduleBtn.style.background = "var(--primary)";
             
@@ -453,6 +451,15 @@
             dmCv.querySelector('.time').innerText = "10:50 - 12:20";
             col3.insertBefore(dmCv, col3.firstChild);
         }
+    }
+
+    // Aplikovať nastavenie pri načítaní
+    applySchedule(showingClassmate);
+
+    scheduleBtn.addEventListener('click', () => {
+        showingClassmate = !showingClassmate;
+        localStorage.setItem('schedule', showingClassmate ? 'classmate' : 'matej');
+        applySchedule(showingClassmate);
         
         // Vynútiť okamžitý prepočet timerov a okrajov podľa nového rozloženia
         updateDashboard(); 
