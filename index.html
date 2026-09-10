@@ -122,7 +122,7 @@
     </div>
 
     <div class="header-flex">
-        <h1>2026/2027 Timetable -> nothing yet</h1>
+        <h1>2026/2027 ZS Timetable</h1>
         <div>
             <button class="theme-toggle" id="schedule-btn" style="background: var(--green); margin-right: 10px;">👥 Spolužiakov rozvrh</button>
             <button class="theme-toggle" id="theme-btn">🌙 Dark Mode</button>
@@ -429,7 +429,7 @@
         showingClassmate = !showingClassmate;
         
         if (showingClassmate) {
-            scheduleBtn.innerText = "👤 Môj rozvrh";
+            scheduleBtn.innerText = "👤 Mišo/Sebo";
             scheduleBtn.style.background = "var(--primary)";
             
             // Presun OOP na pondelok (col-1) na začiatok
@@ -441,7 +441,7 @@
             dmCv.querySelector('.time').innerText = "07:30 - 09:00";
             col2.insertBefore(dmCv, col2.firstChild);
         } else {
-            scheduleBtn.innerText = "👥 Spolužiakov rozvrh";
+            scheduleBtn.innerText = "👤 Matej";
             scheduleBtn.style.background = "var(--green)";
             
             // Presun OOP späť na utorok (col-2) pred APS
