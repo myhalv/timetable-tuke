@@ -454,7 +454,9 @@
             dmCv.dataset.start = "07:30";
             dmCv.dataset.end = "09:00";
             dmCv.querySelector('.time').innerText = "07:30 - 09:00";
-            col2.insertBefore(dmCv, col3.firstChild);
+            
+            // FIX: Changed col3.firstChild to col2.firstChild
+            col2.insertBefore(dmCv, col2.firstChild); 
         } else {
             scheduleBtn.innerText = "👤 Matej";
             scheduleBtn.style.background = "var(--green)";
