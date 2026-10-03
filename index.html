@@ -217,7 +217,15 @@
 </div>
 
 <script>
-    const assignmentsData = [];
+    const assignmentsData = [
+        { subject: "Diskrétna matematika", task: "Zápočtová písomka #1", date: "2026-11-06T08:15" },
+        { subject: "Diskrétna matematika", task: "Zápočtová písomka #2", date: "2026-12-04T08:15" },
+        { subject: "Operačné systémy", task: "Copymaster (tipujem)", date: "2026-10-26T12:00" },
+        { subject: "Operačné systémy", task: "IPC (tipujem)", date: "2026-12-07T12:00" },
+        { subject: "Operačné systémy", task: "Zápočtová písomka #1 (tipujem)", date: "2026-10-26T12:00" },
+        { subject: "Operačné systémy", task: "Zápočtová písomka #2 (tipujem)", date: "2026-11-30T12:00" },
+        { subject: "Architektúry počítačových systémov", task: "Zápočtová písomka", date: "2026-12-04T12:00" },
+    ];
 
     function getMinutes(timeStr) {
         const [h, m] = timeStr.split(':').map(Number);
